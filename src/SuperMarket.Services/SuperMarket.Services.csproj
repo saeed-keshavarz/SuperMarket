@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Categories\Contracts\" />
+    <Folder Include="Categories\Exceptions\" />
+    <Folder Include="Invoices\Contracts\" />
+    <Folder Include="Invoices\Exceptions\" />
+    <Folder Include="Stuffs\Contracts\" />
+    <Folder Include="Stuffs\Exceptions\" />
+    <Folder Include="Vouchers\Contracts\" />
+    <Folder Include="Vouchers\Exceptions\" />
+  </ItemGroup>
+
+</Project>
