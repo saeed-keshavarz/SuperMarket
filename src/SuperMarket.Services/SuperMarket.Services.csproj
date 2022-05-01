@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Categories\Contracts\" />
     <Folder Include="Categories\Exceptions\" />
     <Folder Include="Invoices\Contracts\" />
     <Folder Include="Invoices\Exceptions\" />
@@ -13,6 +12,10 @@
     <Folder Include="Stuffs\Exceptions\" />
     <Folder Include="Vouchers\Contracts\" />
     <Folder Include="Vouchers\Exceptions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SuperMarket.Infrastructure\SuperMarket.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

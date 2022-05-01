@@ -1,4 +1,5 @@
 ﻿
+using SuperMarket.Persistence.EF;
 using Xunit;
 
 namespace SuperMarket.Specs.Infrastructure
