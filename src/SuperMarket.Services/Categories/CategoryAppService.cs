@@ -1,4 +1,5 @@
-﻿using SuperMarket.Infrastructure.Application;
+﻿using SuperMarket.Entities;
+using SuperMarket.Infrastructure.Application;
 using SuperMarket.Services.Categories.Contracts;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,15 @@ namespace SuperMarket.Services.Categories
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+        }
+
+        public void Add(AddCategoryDto dto)
+        {
+            var category = new Category
+            {
+                Title = dto.Title,                
+            };
+            _repository.Add(category);
         }
     }
 }

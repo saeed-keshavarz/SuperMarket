@@ -31,8 +31,4 @@
 		<ProjectReference Include="..\SuperMarket.Persistence.EF\SuperMarket.Persistence.EF.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Category\" />
-	</ItemGroup>
-
 </Project>
