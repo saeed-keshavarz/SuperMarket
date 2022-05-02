@@ -29,6 +29,7 @@ namespace SuperMarket.Services.Categories
                 Title = dto.Title,                
             };
             _repository.Add(category);
+            _unitOfWork.Commit();
         }
     }
 }

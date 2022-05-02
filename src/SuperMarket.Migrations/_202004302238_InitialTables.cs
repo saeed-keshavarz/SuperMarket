@@ -18,7 +18,7 @@ namespace SuperMarket.Migrations
             Delete.Table("Invoices");
             Delete.Table("Vouchers");
             Delete.Table("Stuffs");
-            Delete.Table("Categories");
+            Delete.Table("Categories");    
         }
 
         private void CreateVouchers()
@@ -29,6 +29,7 @@ namespace SuperMarket.Migrations
                 .WithColumn("Date").AsDate()
                 .WithColumn("Quantity").AsInt32().NotNullable()
                 .WithColumn("Price").AsDecimal().NotNullable()
+                .WithColumn("StuffId").AsInt32().NotNullable()
                 .ForeignKey("FK_Vouchers_Stuffs", "Stuffs", "Id")
                 .OnDelete(System.Data.Rule.None);
         }
@@ -42,6 +43,7 @@ namespace SuperMarket.Migrations
                             .WithColumn("Buyer").AsString(100)
                             .WithColumn("Quantity").AsInt32().NotNullable()
                             .WithColumn("Price").AsDecimal().NotNullable()
+                            .WithColumn("StuffId").AsInt32().NotNullable()
                             .ForeignKey("FK_Invoices_Stuffs", "Stuffs", "Id")
                             .OnDelete(System.Data.Rule.None);
         }
