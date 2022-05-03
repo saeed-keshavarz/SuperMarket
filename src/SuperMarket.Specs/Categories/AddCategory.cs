@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SuperMarket.Infrastructure.Application;
 using SuperMarket.Persistence.EF;
 using SuperMarket.Persistence.EF.Categories;
 using SuperMarket.Services.Categories;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
-namespace SuperMarket.Specs.Category
+namespace SuperMarket.Specs.Categories
 {
     [Scenario("تعریف دساه بندی کالا")]
     [Feature("",
@@ -23,10 +24,16 @@ namespace SuperMarket.Specs.Category
     public class AddCategory : EFDataContextDatabaseFixture
     {
         private readonly EFDataContext _dataContext;
+        private readonly CategoryService _sut;
+        private readonly CategoryRepository _repository;
+        private readonly UnitOfWork _unitOfWork;
         private AddCategoryDto _dto;
         public AddCategory(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
+            _unitOfWork = new EFUnitOfWork(_dataContext);
+            _repository = new EFCategoryRepository(_dataContext);
+            _sut = new CategoryAppService(_repository, _unitOfWork);
         }
         [Given("هیچ دسته بندی در فهرست دسته بندی کالا وجود ندارد")]
         public void Given()
@@ -41,9 +48,7 @@ namespace SuperMarket.Specs.Category
             {
                 Title = "لبنیات",
             };
-            var _unitOfWork = new EFUnitOfWork(_dataContext);
-            CategoryRepository _categoryRepository = new EFCategoryRepository(_dataContext);
-            CategoryService _sut = new CategoryAppService(_categoryRepository, _unitOfWork);
+
             _sut.Add(_dto);
         }
 
