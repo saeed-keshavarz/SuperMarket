@@ -38,5 +38,12 @@ namespace SuperMarket.Services.Categories
             _repository.Add(category);
             _unitOfWork.Commit();
         }
+
+        public void Update(int id, UpdateCategoryDto dto)
+        {
+            var category = _repository.FindById(id);
+            category.Title = dto.Title;
+            _unitOfWork.Commit();
+        }
     }
 }
