@@ -26,6 +26,11 @@ namespace SuperMarket.Persistence.EF.Categories
            return _dataContext.Categories.Find(id);
         }
 
+        public IList<Category> GetAll()
+        {
+            return _dataContext.Categories.ToList();
+        }
+
         public bool IsExistCategoryTitle(string title)
         {
             return _dataContext.Categories.Any(_ => _.Title == title);

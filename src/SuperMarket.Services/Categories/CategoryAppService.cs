@@ -39,6 +39,11 @@ namespace SuperMarket.Services.Categories
             _unitOfWork.Commit();
         }
 
+        public IList<Category> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public void Update(int id, UpdateCategoryDto dto)
         {
             var isTitleDuplicate = _repository.IsExistCategoryTitle(dto.Title);

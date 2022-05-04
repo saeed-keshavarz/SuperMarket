@@ -1,4 +1,5 @@
-﻿using SuperMarket.Infrastructure.Application;
+﻿using SuperMarket.Entities;
+using SuperMarket.Infrastructure.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace SuperMarket.Services.Categories.Contracts
     {
         void Add(AddCategoryDto dto);
         void Update(int id, UpdateCategoryDto dto);
+        IList<Category> GetAll();
     }
 }
