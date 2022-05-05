@@ -6,6 +6,7 @@ using SuperMarket.Persistence.EF;
 using SuperMarket.Persistence.EF.Stuffs;
 using SuperMarket.Services.Stuffs;
 using SuperMarket.Services.Stuffs.Contracts;
+using SuperMarket.Services.Stuffs.Exceptions;
 using SuperMarket.Specs.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,11 @@ namespace SuperMarket.Specs.Stuffs
 {
     [Scenario("ویرایش کالا")]
     [Feature("",
-      AsA = "فروشنده ",
-      IWantTo = " کالاها را مدیریت کنم ",
-      InOrderTo = "و آن را به فروش برسانم "
-  )]
-    public class UpdateStuff : EFDataContextDatabaseFixture
+  AsA = "فروشنده ",
+  IWantTo = " کالاها را مدیریت کنم ",
+  InOrderTo = "و آن را به فروش برسانم "
+)]
+    public class UpdateStuffWithDuplicateTitle : EFDataContextDatabaseFixture
     {
         private readonly EFDataContext _dataContext;
         private readonly StuffService _sut;
@@ -32,8 +33,9 @@ namespace SuperMarket.Specs.Stuffs
         private static Category _category;
         private Stuff _stuff;
         private UpdateStuffDto _dto;
+        Action expected;
 
-        public UpdateStuff(ConfigurationFixture configuration) : base(configuration)
+        public UpdateStuffWithDuplicateTitle(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
             _unitOfWork = new EFUnitOfWork(_dataContext);
@@ -62,40 +64,57 @@ namespace SuperMarket.Specs.Stuffs
             };
 
             _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
-
         }
 
-        [And("هیچ کالایی با عنوان ‘پنیر’ در دسته بندی کالا با عنوان ‘لبنیات’ وجود ندارد")]
-        public void And()
+        [And("کالایی با عنوان ‘پنیر’ در دسته بندی کالا با عنوان ‘لبنیات’ وجود دارد")]
+        public void GivenAnd()
         {
+            _stuff = new Stuff()
+            {
+                Title = "پنیر",
+                Inventory = 10,
+                Unit = "پاکت",
+                MinimumInventory = 5,
+                MaximumInventory = 20,
+                CategoryId = _category.Id,
+            };
 
+            _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
         }
 
-        [When("کالایی با عنوان ‘شیر’ را به ‘پنیر’ در دسته بندی با عنوان ‘لبنیات’ ویرایش می کنیم")]
+        [When("کالایی با عنوان ‘شیر’ را به ‘پنیر’ ویرایش می کنیم")]
         public void When()
         {
             var stuff = _dataContext.Stuffs.FirstOrDefault(_ => _.Title == _stuff.Title);
             _dto = GenerateUpdateStuffDto("پنیر");
 
-            _sut.Update(stuff.Id, _dto);
+            expected = () => _sut.Update(stuff.Id, _dto);
         }
 
-        [Then("کالایی با عنوان ‘پنیر’ باید در دسته بندی کالا با عنوان ‘لبنیات’ وجود داشته باشد")]
+        [Then("تنها یک کالا با عنوان ‘ پنیر’ باید در دسته بندی کالا با عنوان ‘لبنیات’ وجود داشته باشد")]
         public void Then()
         {
-            var expected = _dataContext.Stuffs.FirstOrDefault();
-            expected.Title.Should().Be(_dto.Title);
-            expected.CategoryId.Should().Be(_category.Id);
+            _dataContext.Stuffs.Where(_ => _.Title == _dto.Title
+            && _.CategoryId == _category.Id)
+                .Should().HaveCount(1);
+        }
+
+        [And("")]
+        public void ThenAnd()
+        {
+            expected.Should().ThrowExactly<DuplicateStuffTitleInCategoryException>();
         }
 
         [Fact]
         public void Run()
         {
             Runner.RunScenario(_ => Given()
-            , _=> And()
+            , _ => GivenAnd()
             , _ => When()
-            , _ => Then());
+            , _ => Then()
+            , _ => ThenAnd());
         }
+
 
         private static UpdateStuffDto GenerateUpdateStuffDto(string title)
         {
