@@ -10,5 +10,6 @@ namespace SuperMarket.Services.Stuffs.Contracts
     public interface StuffService : Service
     {
         void Add(AddStuffDto dto);
+        void Update(int id, UpdateStuffDto dto);
     }
 }

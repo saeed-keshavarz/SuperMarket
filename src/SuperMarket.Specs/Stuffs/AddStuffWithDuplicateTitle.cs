@@ -22,7 +22,7 @@ namespace SuperMarket.Specs.Stuffs
     [Feature("",
        AsA = "فروشنده ",
        IWantTo = " کالاها را مدیریت کنم ",
-       InOrderTo = "و آن را به فروش برسانم "
+       InOrderTo = "آن را به فروش برسانم "
    )]
     public class AddStuffWithDuplicateTitle : EFDataContextDatabaseFixture
     {
