@@ -17,22 +17,23 @@ using static SuperMarket.Specs.BDDHelper;
 
 namespace SuperMarket.Specs.Categories
 {
-    [Scenario("مشاهده دسته بندی ها ")]
+    [Scenario("مشاهده دسته بندی ها با کالا ")]
     [Feature("",
-   AsA = "فروشنده ",
-   IWantTo = " دسته بندی کالا را مدیریت کنم  ",
-   InOrderTo = "در آن کالای خود را تعریف کنم "
+AsA = "فروشنده ",
+IWantTo = " دسته بندی کالا را مدیریت کنم  ",
+InOrderTo = "در آن کالای خود را تعریف کنم "
 )]
-    public class GetAllCategory : EFDataContextDatabaseFixture
+    public class GetAllCategoryWithStuffs : EFDataContextDatabaseFixture
     {
         private readonly EFDataContext _dataContext;
         private readonly CategoryService _sut;
         private readonly CategoryRepository _repository;
         private readonly UnitOfWork _unitOfWork;
         private Category _category;
+        private Stuff _stuff;
         IList<Category> expected;
 
-        public GetAllCategory(ConfigurationFixture configuration) : base(configuration)
+        public GetAllCategoryWithStuffs(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
             _unitOfWork = new EFUnitOfWork(_dataContext);
@@ -51,29 +52,34 @@ namespace SuperMarket.Specs.Categories
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 
-        [And("دسته بندی با عنوان ‘خشکبار’ در فهرست دسته بندی کالا وجود دارد")]
+        [And("کالایی با عنوان ‘پنیر’ در دسته بندی با عنوان ‘لبنیات’ وجود دارد")]
         public void And()
         {
-            _category = new Category()
+            _stuff = new Stuff()
             {
-                Title = "خشکبار",
+                Title = "پنیر",
+                CategoryId = _category.Id,
+                Inventory = 10,
+                MaximumInventory = 20,
+                MinimumInventory =5,
+                Unit= "pack"
             };
 
-            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
         }
 
-        [When("می خواهیم دسته بندی ها را مشاهده کنیم")]
+        [When("")]
         public void When()
         {
-            expected = _sut.GetAll();
+            expected = _sut.GetAllCategoryWithStuff();
         }
 
-        [Then("دسته بندی ها با عنوان های ‘لبنیات’  و ‘خشکبار’ را باید مشاهده کنیم")]
+        [Then("دسته بندی  با عنوان ‘لبنیات’  و کالای ‘پنیر’ را باید مشاهده کنیم")]
         public void Then()
         {
-            expected.Should().HaveCount(2);
+            expected.Should().HaveCount(1);
             expected.Should().Contain(_ => _.Title == "لبنیات");
-            expected.Should().Contain(_ => _.Title == "خشکبار");
+            expected.Should().Contain(_ => _.Stuffs.First().Title == "پنیر");
         }
 
         [Fact]

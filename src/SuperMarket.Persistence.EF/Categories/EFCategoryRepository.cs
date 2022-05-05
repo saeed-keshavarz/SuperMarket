@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SuperMarket.Persistence.EF.Categories
 {
-    public class EFCategoryRepository:CategoryRepository
+    public class EFCategoryRepository : CategoryRepository
     {
         private readonly EFDataContext _dataContext;
         public EFCategoryRepository(EFDataContext dataContext)
@@ -23,12 +23,26 @@ namespace SuperMarket.Persistence.EF.Categories
 
         public Category FindById(int id)
         {
-           return _dataContext.Categories.Find(id);
+            return _dataContext.Categories.Find(id);
         }
 
         public IList<Category> GetAll()
         {
             return _dataContext.Categories.ToList();
+        }
+
+        public IList<Category> GetCategoryWithStuffDto()
+        {
+            return _dataContext.Categories
+                .Select(_ => new Category()
+                {
+                    Title = _.Title,
+                    Stuffs = _.Stuffs.Select(_ => new Stuff
+                    {
+                        Title = _.Title,
+                    }).ToHashSet(),
+
+                }).ToList();
         }
 
         public bool IsExistCategoryTitle(string title)

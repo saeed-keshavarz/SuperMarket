@@ -44,6 +44,11 @@ namespace SuperMarket.Services.Categories
             return _repository.GetAll();
         }
 
+        public IList<Category> GetAllCategoryWithStuff()
+        {
+            return _repository.GetCategoryWithStuffDto();
+        }
+
         public void Update(int id, UpdateCategoryDto dto)
         {
             var isTitleDuplicate = _repository.IsExistCategoryTitle(dto.Title);
