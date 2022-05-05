@@ -42,6 +42,12 @@ namespace SuperMarket.Services.Categories
         public void Delete(int id)
         {
            var category = _repository.FindById(id);
+
+            if(category.Stuffs.Count() > 0)
+            {
+                throw new CanNotDeleteCategoryHasStuffException();
+            }
+
             _repository.Delete(category);
             _unitOfWork.Commit();
         }
