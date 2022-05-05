@@ -49,6 +49,11 @@ namespace SuperMarket.Services.Stuffs
         {
             var stuff = _repository.FindById(id);
 
+            if(stuff.Vouchers.Count() > 0)
+            {
+                throw new CanNotDeleteStuffHasVoucherException();
+            }
+
             _repository.Delete(stuff);
             _unitOfWork.Commit();
         }

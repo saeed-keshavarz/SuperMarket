@@ -6,6 +6,7 @@ using SuperMarket.Persistence.EF;
 using SuperMarket.Persistence.EF.Stuffs;
 using SuperMarket.Services.Stuffs;
 using SuperMarket.Services.Stuffs.Contracts;
+using SuperMarket.Services.Stuffs.Exceptions;
 using SuperMarket.Specs.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,13 @@ using static SuperMarket.Specs.BDDHelper;
 
 namespace SuperMarket.Specs.Stuffs
 {
-    [Scenario("حذف کالا")]
+    [Scenario("حذف کالای دارای سند ورود")]
     [Feature("",
 AsA = "فروشنده ",
 IWantTo = " کالاها را مدیریت کنم ",
 InOrderTo = "و آن را به فروش برسانم "
 )]
-    public class DeleteStuff : EFDataContextDatabaseFixture
+    public class DeleteStuffHasVoucher : EFDataContextDatabaseFixture
     {
         private readonly EFDataContext _dataContext;
         private readonly StuffService _sut;
@@ -31,8 +32,9 @@ InOrderTo = "و آن را به فروش برسانم "
         private readonly UnitOfWork _unitOfWork;
         private static Category _category;
         private Stuff _stuff;
+        Action expected;
 
-        public DeleteStuff(ConfigurationFixture configuration) : base(configuration)
+        public DeleteStuffHasVoucher(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
             _unitOfWork = new EFUnitOfWork(_dataContext);
@@ -40,7 +42,7 @@ InOrderTo = "و آن را به فروش برسانم "
             _sut = new StuffAppService(_repository, _unitOfWork);
         }
 
-        [Given("دسته بندی کالایی با عنوان ‘لبنیات’ در فهرست دسته بندی کالا وجود دارد")]
+        [Given("کالایی با عنوان ‘شیر’ و موجودی ‘10’ و واحد ‘پاکت ‘ و حداقل موجودی ‘5’ و حداکثر موجودی ‘20’ در دسته بندی کالا  با عنوان ‘ لبنبات’ وجود دارد")]
         public void Given()
         {
             _category = new Category()
@@ -49,15 +51,11 @@ InOrderTo = "و آن را به فروش برسانم "
             };
 
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
-        }
 
-        [And("کالایی با عنوان ‘شیر’ و موجودی ‘0’ و واحد ‘پاکت ‘ و حداقل موجودی ‘5’ و حداکثر موجودی ‘20’ در دسته بندی کالا  با عنوان ‘ لبنبات’ وجود دارد")]
-        public void And()
-        {
             _stuff = new Stuff()
             {
                 Title = "شیر",
-                Inventory = 0,
+                Inventory = 10,
                 Unit = "پاکت",
                 MinimumInventory = 5,
                 MaximumInventory = 20,
@@ -67,28 +65,52 @@ InOrderTo = "و آن را به فروش برسانم "
             _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
         }
 
+        [And("سند ورود کالایی با عنوان ‘خرید تیرماه’ و تاریخ '15 / 04 / 1400' و تعداد '10' و قیمت '10000' مربوط به کالایی با عنوان ‘شیر’ وجود دارد")]
+        public void GivenAnd()
+        {
+            var _voucher = new Voucher()
+            {
+                Title = "خرید تیرماه",
+                Date = DateTime.Now,
+                Quantity = 10,
+                Price = 10000,
+                StuffId=_stuff.Id,
+            };
+
+            _dataContext.Manipulate(_ => _.Vouchers.Add(_voucher));
+        }
+
         [When("کالا با عنوان ‘شیر’ را حذف می کنیم")]
         public void When()
         {
             _stuff = _dataContext.Stuffs.FirstOrDefault(_ => _.Title == _stuff.Title);
 
-            _sut.Delete(_stuff.Id);
+            expected = () => _sut.Delete(_stuff.Id);
         }
 
         [Then("کالایی با عنوان ‘ شیر ‘ در دسته بندی کالا با عنوان ‘لبنیات’ باید وجود نداشته باشد")]
         public void Then()
         {
             _dataContext.Stuffs.Should().
-                NotContain(_ => _.Title == _stuff.Title);
+                Contain(_ => _.Title == _stuff.Title);
+        }
+
+        [And("خطایی با عنوان ‘کالا دارای سند ورود غیرقابل حذف است’ باید رخ دهد")]
+        public void ThenAnd()
+        {
+            expected.Should().ThrowExactly<CanNotDeleteStuffHasVoucherException>();
         }
 
         [Fact]
         public void Run()
         {
-            Runner.RunScenario(_ => Given()
-            , _ => And()
+            Runner.RunScenario(
+                _ => Given()
+            , _ => GivenAnd()
             , _ => When()
-            , _ => Then());
+            , _ => Then()
+            , _ => ThenAnd());
         }
+
     }
 }
