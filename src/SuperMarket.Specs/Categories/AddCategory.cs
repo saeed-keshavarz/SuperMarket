@@ -15,7 +15,7 @@ using static SuperMarket.Specs.BDDHelper;
 
 namespace SuperMarket.Specs.Categories
 {
-    [Scenario("تعریف دساه بندی کالا")]
+    [Scenario("تعریف دسته بندی کالا")]
     [Feature("",
         AsA = "فروشنده ",
         IWantTo = " دسته بندی کالا را مدیریت کنم  ",

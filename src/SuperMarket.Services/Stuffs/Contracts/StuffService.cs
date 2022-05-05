@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace SuperMarket.Services.Stuffs.Contracts
 {
-    public interface StuffService:Service 
+    public interface StuffService : Service
     {
+        void Add(AddStuffDto dto);
     }
 }
