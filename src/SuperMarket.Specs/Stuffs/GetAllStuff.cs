@@ -19,11 +19,11 @@ namespace SuperMarket.Specs.Stuffs
 {
     [Scenario("ویرایش کالا")]
     [Feature("",
-      AsA = "فروشنده ",
-      IWantTo = " کالاها را مدیریت کنم ",
-      InOrderTo = "و آن را به فروش برسانم "
-  )]
-    public class UpdateStuff : EFDataContextDatabaseFixture
+AsA = "فروشنده ",
+IWantTo = " کالاها را مدیریت کنم ",
+InOrderTo = "و آن را به فروش برسانم "
+)]
+    public class GetAllStuff : EFDataContextDatabaseFixture
     {
         private readonly EFDataContext _dataContext;
         private readonly StuffService _sut;
@@ -31,9 +31,9 @@ namespace SuperMarket.Specs.Stuffs
         private readonly UnitOfWork _unitOfWork;
         private static Category _category;
         private Stuff _stuff;
-        private UpdateStuffDto _dto;
+        IList<Stuff> expected;
 
-        public UpdateStuff(ConfigurationFixture configuration) : base(configuration)
+        public GetAllStuff(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
             _unitOfWork = new EFUnitOfWork(_dataContext);
@@ -62,52 +62,46 @@ namespace SuperMarket.Specs.Stuffs
             };
 
             _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
-
         }
 
-        [And("هیچ کالایی با عنوان ‘پنیر’ در دسته بندی کالا با عنوان ‘لبنیات’ وجود ندارد")]
+        [And("کالایی با عنوان ‘پنیر’ در دسته بندی کالا با عنوان ‘لبنیات’ وجود دارد")]
         public void And()
         {
-
-        }
-
-        [When("کالایی با عنوان ‘شیر’ را به ‘پنیر’ در دسته بندی با عنوان ‘لبنیات’ ویرایش می کنیم")]
-        public void When()
-        {
-            var stuff = _dataContext.Stuffs.FirstOrDefault(_ => _.Title == _stuff.Title);
-            _dto = GenerateUpdateStuffDto("پنیر");
-
-            _sut.Update(stuff.Id, _dto);
-        }
-
-        [Then("کالایی با عنوان ‘پنیر’ باید در دسته بندی کالا با عنوان ‘لبنیات’ وجود داشته باشد")]
-        public void Then()
-        {
-            _dataContext.Stuffs.Where(_ => _.Title == _dto.Title
-             && _.CategoryId == _category.Id)
-                 .Should().HaveCount(1);
-        }
-
-        [Fact]
-        public void Run()
-        {
-            Runner.RunScenario(_ => Given()
-            , _=> And()
-            , _ => When()
-            , _ => Then());
-        }
-
-        private static UpdateStuffDto GenerateUpdateStuffDto(string title)
-        {
-            return new UpdateStuffDto
+            _stuff = new Stuff()
             {
-                Title = title,
+                Title = "پنیر",
                 Inventory = 10,
                 Unit = "پاکت",
                 MinimumInventory = 5,
                 MaximumInventory = 20,
                 CategoryId = _category.Id,
             };
+
+            _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
+        }
+
+        [When("می خواهیم کالاها را مشاهده کنیم")]
+        public void When()
+        {
+            expected = _sut.GetAllStuff();
+        }
+
+        [Then("")]
+        public void Then()
+        {
+            expected.Should().HaveCount(2);
+            expected.Should().Contain(_ => _.Title == "پنیر");
+            expected.Should().Contain(_ => _.Title == "شیر");
+            expected.Should().Contain(_ => _.Category.Title == "لبنیات");
+        }
+
+        [Fact]
+        public void Run()
+        {
+            Runner.RunScenario(_ => Given()
+            , _ => And()
+            , _ => When()
+            , _ => Then());
         }
     }
 }

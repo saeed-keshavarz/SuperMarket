@@ -45,6 +45,11 @@ namespace SuperMarket.Services.Stuffs
             _unitOfWork.Commit();
         }
 
+        public IList<Stuff> GetAllStuff()
+        {
+            return _repository.GetAllStuff();
+        }
+
         public void Update(int id, UpdateStuffDto dto)
         {
             var isTitleDuplicate = _repository.IsExistStuffTitle(dto.Title);

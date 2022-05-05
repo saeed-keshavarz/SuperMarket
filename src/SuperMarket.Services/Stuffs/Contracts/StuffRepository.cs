@@ -12,5 +12,6 @@ namespace SuperMarket.Services.Stuffs.Contracts
         void Add(Stuff stuff);
         bool IsExistStuffTitle(string title);
         Stuff FindById(int id);
+        IList<Stuff> GetAllStuff();
     }
 }
