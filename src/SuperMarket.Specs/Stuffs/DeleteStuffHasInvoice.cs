@@ -18,13 +18,13 @@ using static SuperMarket.Specs.BDDHelper;
 
 namespace SuperMarket.Specs.Stuffs
 {
-    [Scenario("حذف کالای دارای سند ورود")]
+    [Scenario("حذف کالای دارای فاکتور فروش")]
     [Feature("",
 AsA = "فروشنده ",
 IWantTo = " کالاها را مدیریت کنم ",
 InOrderTo = "و آن را به فروش برسانم "
 )]
-    public class DeleteStuffHasVoucher : EFDataContextDatabaseFixture
+    public class DeleteStuffHasInvoice : EFDataContextDatabaseFixture
     {
         private readonly EFDataContext _dataContext;
         private readonly StuffService _sut;
@@ -33,8 +33,7 @@ InOrderTo = "و آن را به فروش برسانم "
         private static Category _category;
         private Stuff _stuff;
         Action expected;
-
-        public DeleteStuffHasVoucher(ConfigurationFixture configuration) : base(configuration)
+        public DeleteStuffHasInvoice(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
             _unitOfWork = new EFUnitOfWork(_dataContext);
@@ -65,19 +64,20 @@ InOrderTo = "و آن را به فروش برسانم "
             _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
         }
 
-        [And("سند ورود کالایی با عنوان ‘خرید تیرماه’ و تاریخ '15 / 04 / 1400' و تعداد '10' و قیمت '10000' مربوط به کالایی با عنوان ‘شیر’ وجود دارد")]
+        [And("فاکتور فروش کالایی با عنوان ‘فاکتور 100’ و تاریخ ‘15/04/1400’ و تعداد ‘10’ و قیمت ‘10000’ و خریدار ‘کشاورز’ مربوط به کالایی با عنوان ‘شیر’ وجود دارد")]
         public void GivenAnd()
         {
-            var voucher = new Voucher()
+            var invoice = new Invoice()
             {
-                Title = "خرید تیرماه",
-                Date = DateTime.Now,
+                Title = "فاکتور 100",
                 Quantity = 10,
                 Price = 10000,
-                StuffId=_stuff.Id,
+                Buyer = "کشاورز",
+                Date = DateTime.Now,
+                StuffId = _stuff.Id,
             };
 
-            _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
+            _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
         }
 
         [When("کالا با عنوان ‘شیر’ را حذف می کنیم")]
@@ -95,10 +95,10 @@ InOrderTo = "و آن را به فروش برسانم "
                 Contain(_ => _.Title == _stuff.Title);
         }
 
-        [And("خطایی با عنوان ‘کالا دارای سند ورود غیرقابل حذف است’ باید رخ دهد")]
+        [And("خطایی با عنوان ‘کالا دارای فاکتور غیرقابل حذف است’ باید رخ دهد")]
         public void ThenAnd()
         {
-            expected.Should().ThrowExactly<CanNotDeleteStuffHasVoucherException>();
+            expected.Should().ThrowExactly<CanNotDeleteStuffHasInvoiceException>();
         }
 
         [Fact]
@@ -111,6 +111,5 @@ InOrderTo = "و آن را به فروش برسانم "
             , _ => Then()
             , _ => ThenAnd());
         }
-
     }
 }

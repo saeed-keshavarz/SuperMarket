@@ -53,6 +53,10 @@ namespace SuperMarket.Services.Stuffs
             {
                 throw new CanNotDeleteStuffHasVoucherException();
             }
+            if (stuff.Invoces.Count() > 0)
+            {
+                throw new CanNotDeleteStuffHasInvoiceException();
+            }
 
             _repository.Delete(stuff);
             _unitOfWork.Commit();
