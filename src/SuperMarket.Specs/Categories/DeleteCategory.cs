@@ -58,7 +58,7 @@ InOrderTo = "در آن کالای خود را تعریف کنم "
             _sut.Delete(_category.Id);
         }
 
-        [Then("")]
+        [Then("دسته بندی با عنوان ‘ لبنیات ‘ باید در فهرست دسته بندی کالا وجود نداشته باشد")]
         public void Then()
         {
             _dataContext.Categories.Should().

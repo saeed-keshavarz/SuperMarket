@@ -22,6 +22,11 @@ namespace SuperMarket.Persistence.EF.Stuffs
             _dataContext.Add(stuff);
         }
 
+        public void Delete(Stuff stuff)
+        {
+            _dataContext.Stuffs.Remove(stuff);
+        }
+
         public Stuff FindById(int id)
         {
             return _dataContext.Stuffs.Find(id);

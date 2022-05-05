@@ -45,6 +45,14 @@ namespace SuperMarket.Services.Stuffs
             _unitOfWork.Commit();
         }
 
+        public void Delete(int id)
+        {
+            var stuff = _repository.FindById(id);
+
+            _repository.Delete(stuff);
+            _unitOfWork.Commit();
+        }
+
         public IList<Stuff> GetAllStuff()
         {
             return _repository.GetAllStuff();
