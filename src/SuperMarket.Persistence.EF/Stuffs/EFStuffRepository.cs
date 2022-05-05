@@ -21,5 +21,10 @@ namespace SuperMarket.Persistence.EF.Stuffs
         {
             _dataContext.Add(stuff);
         }
+
+        public bool IsExistStuffTitle(string title)
+        {
+            return _dataContext.Stuffs.Any(_ => _.Title == title);
+        }
     }
 }

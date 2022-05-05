@@ -10,5 +10,6 @@ namespace SuperMarket.Services.Stuffs.Contracts
     public interface StuffRepository : RepoSitory
     {
         void Add(Stuff stuff);
+        bool IsExistStuffTitle(string title);
     }
 }
