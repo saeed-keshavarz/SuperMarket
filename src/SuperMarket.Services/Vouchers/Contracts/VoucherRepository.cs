@@ -11,5 +11,6 @@ namespace SuperMarket.Services.Vouchers.Contracts
     public interface VoucherRepository : Repository
     {
         void Add(Voucher voucher);
+        Stuff GetStuffById(int stuffId);
     }
 }

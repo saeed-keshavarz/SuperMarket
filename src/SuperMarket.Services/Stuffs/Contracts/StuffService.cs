@@ -13,7 +13,6 @@ namespace SuperMarket.Services.Stuffs.Contracts
         void Add(AddStuffDto dto);
         void Update(int id, UpdateStuffDto dto);
         IList<Stuff> GetAllStuff();
-        void Delete(int id);
-        void UpdateInventory(int id, int quantity);
+        void Delete(int id);        
     }
 }

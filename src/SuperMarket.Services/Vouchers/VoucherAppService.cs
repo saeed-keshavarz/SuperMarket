@@ -1,5 +1,6 @@
 ﻿using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
+using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Vouchers.Contracts;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace SuperMarket.Services.Vouchers
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(AddVoucherDto dto)
+        public void Add(AddVoucherDto dto, int stuffId)
         {
             var voucher = new Voucher
             {
@@ -33,6 +34,11 @@ namespace SuperMarket.Services.Vouchers
                 StuffId = dto.StuffId,
             };
             _repository.Add(voucher);
+
+            var stuff = _repository.GetStuffById(stuffId);
+            stuff.Inventory += dto.Quantity;
+
+            _unitOfWork.Commit();
         }
     }
 }
