@@ -79,5 +79,11 @@ namespace SuperMarket.Services.Stuffs
             stuff.Title = dto.Title;
             _unitOfWork.Commit();
         }
+
+        public void UpdateInventory(int id, int quantity)
+        {
+            var stuff = _repository.FindById(id);
+            stuff.Inventory += quantity;
+        }
     }
 }

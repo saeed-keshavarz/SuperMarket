@@ -19,7 +19,7 @@ namespace SuperMarket.Persistence.EF.Stuffs
 
         public void Add(Stuff stuff)
         {
-            _dataContext.Add(stuff);
+            _dataContext.Stuffs.Add(stuff);
         }
 
         public void Delete(Stuff stuff)
