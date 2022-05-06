@@ -33,6 +33,7 @@ namespace SuperMarket.Services.Vouchers
                 Quantity = dto.Quantity,
                 StuffId = dto.StuffId,
             };
+
             _repository.Add(voucher);
 
             var stuff = _repository.GetStuffById(stuffId);

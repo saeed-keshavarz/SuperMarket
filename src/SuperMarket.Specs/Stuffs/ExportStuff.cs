@@ -3,12 +3,9 @@ using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
-using SuperMarket.Persistence.EF.Stuffs;
-using SuperMarket.Persistence.EF.Vouchers;
-using SuperMarket.Services.Stuffs;
-using SuperMarket.Services.Stuffs.Contracts;
-using SuperMarket.Services.Vouchers;
-using SuperMarket.Services.Vouchers.Contracts;
+using SuperMarket.Persistence.EF.Invoices;
+using SuperMarket.Services.Invoices;
+using SuperMarket.Services.Invoices.Contracts;
 using SuperMarket.Specs.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -20,28 +17,28 @@ using static SuperMarket.Specs.BDDHelper;
 
 namespace SuperMarket.Specs.Stuffs
 {
-    [Scenario("ورود کالا")]
+    [Scenario("خروج کالا")]
     [Feature("",
 AsA = "فروشنده ",
 IWantTo = " کالاها را مدیریت کنم ",
 InOrderTo = "و آن را به فروش برسانم "
 )]
-    public class ImportStuff : EFDataContextDatabaseFixture
+    public class ExportStuff : EFDataContextDatabaseFixture
     {
         private readonly EFDataContext _dataContext;
-        private readonly VoucherService _sut;
-        private readonly VoucherRepository _repository;
+        private readonly InvoiceService _sut;
+        private readonly InvoiceRepository _repository;
         private readonly UnitOfWork _unitOfWork;
         private Stuff _stuff;
         private Category _category;
-        private AddVoucherDto _dto;
+        private AddInvoiceDto _dto;
 
-        public ImportStuff(ConfigurationFixture configuration) : base(configuration)
+        public ExportStuff(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
             _unitOfWork = new EFUnitOfWork(_dataContext);
-            _repository = new EFVoucherRepository(_dataContext);
-            _sut = new VoucherAppService(_repository, _unitOfWork);
+            _repository = new EFInvoiceRepository(_dataContext);
+            _sut = new InvoiceAppService(_repository, _unitOfWork);
         }
 
         [Given("کالایی با عنوان ‘شیر’ و موجودی ‘10’ و واحد ‘پاکت ‘ و حداقل موجودی ‘5’ و حداکثر موجودی ‘20’ در دسته بندی کالا  با عنوان ‘ لبنبات’ وجود دارد")]
@@ -67,31 +64,34 @@ InOrderTo = "و آن را به فروش برسانم "
             _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
         }
 
-        [And("هیچ سند ورود کالایی در فهرست سند ورودی کالا وجود ندارد")]
+        [And("هیچ فاکتور فروش کالایی در فهرست فاکتور فروش کالا وجود ندارد")]
         public void GivenAnd()
         {
 
         }
 
-        [When("کالایی  با تعداد ‘10’ و قیمت خرید '1000' در تاریخ ‘21/02/1400’  وارد میکنیم")]
+
+        [When("کالایی با کد ‘100’ با تعداد ‘5’ و قیمت فروش  ‘2000’ در تاریخ ‘21/02/1400’  خروج میکنیم.")]
         public void When()
         {
 
-            _dto = new AddVoucherDto()
+            _dto = new AddInvoiceDto()
             {
-                Title = "سند: " + _stuff.Title + DateTime.Now.ToShortDateString(),
+                Title = "فاکتور: " + _stuff.Title + DateTime.Now.ToShortDateString(),
                 Date = new DateTime(1400, 02, 21),
-                Quantity = 10,
-                Price = 1000,
+                Quantity = 5,
+                Price = 2000,
                 StuffId = _stuff.Id,
+                Buyer="کشاورز",
             };
 
-             _sut.Add(_dto, _stuff.Id);
+            _sut.Add(_dto, _stuff.Id);
         }
-        [Then("سند ورود کالایی با کد ‘100’ با تعداد ‘10’ در تاریخ ‘21/02/1400’ در فهرست سند ورودی کالا باید وجود داشته باشد")]
+
+        [Then("فاکتور فروش کالایی با کد کالا ‘100’ با تعداد ‘5’ و خریدار ‘کشاورز’ در تاریخ ‘21/02/1400’ در فهرست فاکتور فروش کالا باید وجود داشته باشد")]
         public void Then()
         {
-            var expected = _dataContext.Vouchers.FirstOrDefault();
+            var expected = _dataContext.Invoices.FirstOrDefault();
             expected.Title.Should().Be(_dto.Title);
             expected.Date.Should().Be(_dto.Date);
             expected.Quantity.Should().Be(_dto.Quantity);
@@ -99,13 +99,14 @@ InOrderTo = "و آن را به فروش برسانم "
             expected.StuffId.Should().Be(_dto.StuffId);
         }
 
-        [And("کالایی با عنوان ‘شیر’ و موجودی ‘20’ عدد در فهرست کالا ها باید وجود داشته باشد ")]
+        [And("کالایی با عنوان ‘شیر’ و موجودی ‘5’ عدد در فهرست کالا ها باید وجود داشته باشد ")]
         public void ThenAnd()
         {
             var expected = _dataContext.Stuffs.FirstOrDefault();
             expected.Title.Should().Be(_stuff.Title);
-            expected.Inventory.Should().Be(20);
+            expected.Inventory.Should().Be(5);
         }
+
         [Fact]
         public void Run()
         {
@@ -113,7 +114,7 @@ InOrderTo = "و آن را به فروش برسانم "
             , _ => GivenAnd()
             , _ => When()
             , _ => Then()
-            , _=> ThenAnd());
+            , _ => ThenAnd());
         }
     }
 }
