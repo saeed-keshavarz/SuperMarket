@@ -102,7 +102,6 @@ namespace SuperMarket.Specs.Stuffs
             return new UpdateStuffDto
             {
                 Title = title,
-                Inventory = 10,
                 Unit = "پاکت",
                 MinimumInventory = 5,
                 MaximumInventory = 20,

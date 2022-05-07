@@ -106,14 +106,6 @@ InOrderTo = "و آن را به فروش برسانم "
             expected.Title.Should().Be(_stuff.Title);
             expected.Inventory.Should().Be(20);
         }
-        [Fact]
-        public void Run()
-        {
-            Runner.RunScenario(_ => Given()
-            , _ => GivenAnd()
-            , _ => When()
-            , _ => Then()
-            , _=> ThenAnd());
-        }
+      
     }
 }

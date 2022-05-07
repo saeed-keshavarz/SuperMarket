@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SuperMarket.Services.Vouchers
 {
-    public class VoucherAppService:VoucherService
+    public class VoucherAppService : VoucherService
     {
         private readonly VoucherRepository _repository;
         private readonly UnitOfWork _unitOfWork;
@@ -38,6 +38,32 @@ namespace SuperMarket.Services.Vouchers
 
             var stuff = _repository.GetStuffById(stuffId);
             stuff.Inventory += dto.Quantity;
+
+            _unitOfWork.Commit();
+        }
+
+        public void Update(int id, UpdateVoucherDto dto)
+        {
+            var voucher = _repository.FindById(id);
+            voucher.Quantity = dto.Quantity;
+            voucher.StuffId = dto.StuffId;
+            voucher.Date = dto.Date;
+            voucher.Price = dto.Price;
+
+            //if (stuffId != dto.StuffId)
+            //{
+            //    var previousStuff = _repository.GetStuffById(stuffId);
+            //    previousStuff.Inventory -= quantity;
+
+            //    var newStuff = _repository.GetStuffById(dto.StuffId);
+            //    newStuff.Inventory += dto.Quantity;
+            //}
+            //else
+            //{
+                //var stuff = _repository.GetStuffById(stuffId);
+                //stuff.Inventory -= quantity;
+                //stuff.Inventory += dto.Quantity;
+            //}
 
             _unitOfWork.Commit();
         }
