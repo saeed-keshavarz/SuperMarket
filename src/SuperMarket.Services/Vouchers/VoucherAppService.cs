@@ -42,7 +42,12 @@ namespace SuperMarket.Services.Vouchers
             _unitOfWork.Commit();
         }
 
-        public void Update(int id, UpdateVoucherDto dto)
+        public IList<Voucher> GetAllVouchers()
+        {
+            return _repository.GetAllVouchers();
+        }
+
+        public void Update(int id, UpdateVoucherDto dto, int stuffId, int quantity)
         {
             var voucher = _repository.FindById(id);
             voucher.Quantity = dto.Quantity;
@@ -50,20 +55,20 @@ namespace SuperMarket.Services.Vouchers
             voucher.Date = dto.Date;
             voucher.Price = dto.Price;
 
-            //if (stuffId != dto.StuffId)
-            //{
-            //    var previousStuff = _repository.GetStuffById(stuffId);
-            //    previousStuff.Inventory -= quantity;
+            if (stuffId != dto.StuffId)
+            {
+                var previousStuff = _repository.GetStuffById(stuffId);
+                previousStuff.Inventory -= quantity;
 
-            //    var newStuff = _repository.GetStuffById(dto.StuffId);
-            //    newStuff.Inventory += dto.Quantity;
-            //}
-            //else
-            //{
-                //var stuff = _repository.GetStuffById(stuffId);
-                //stuff.Inventory -= quantity;
-                //stuff.Inventory += dto.Quantity;
-            //}
+                var newStuff = _repository.GetStuffById(dto.StuffId);
+                newStuff.Inventory += dto.Quantity;
+            }
+            else
+            {
+                var stuff = _repository.GetStuffById(stuffId);
+                stuff.Inventory -= quantity;
+                stuff.Inventory += dto.Quantity;
+            }
 
             _unitOfWork.Commit();
         }

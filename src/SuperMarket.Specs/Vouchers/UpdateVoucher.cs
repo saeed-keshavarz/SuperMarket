@@ -77,24 +77,24 @@ namespace SuperMarket.Specs.Vouchers
                 StuffId = _stuff.Id,
             };
 
-            _dataContext.Manipulate(_ =>_.Vouchers.Add(_voucher));
+            _dataContext.Manipulate(_ => _.Vouchers.Add(_voucher));
 
         }
 
         [When("سند ورود با عنوان ‘سند شیر 21/02/1400’ و کد کالا ‘100’ و  تاریخ ‘21/02/1400’ و تعداد ‘10’ و قیمت ‘10000’ به ‘سند ورود شیر 21/02/1400’ و کد کالا ‘100’  تاریخ ‘20/02/1400’ و تعداد ‘15’ و قیمت ‘20000’ ویرایش می کنیم")]
         public void When()
         {
-            var voucher = _dataContext.Vouchers.FirstOrDefault(_=>_.Title == _voucher.Title);
+            var voucher = _dataContext.Vouchers.FirstOrDefault(_ => _.Title == _voucher.Title);
             _dto = new UpdateVoucherDto()
             {
-                Title = "سند: " + _stuff.Title + " "+ DateTime.Now.ToShortDateString(),
-                Date = new DateTime(1400, 02, 21),
-                Quantity = 10,
-                Price = 1000,
+                Title = "سند: " + _stuff.Title + " " + DateTime.Now.ToShortDateString(),
+                Date = new DateTime(1400, 02, 20),
+                Quantity = 15,
+                Price = 20000,
                 StuffId = _stuff.Id,
             };
 
-            _sut.Update(voucher.Id, _dto);
+            _sut.Update(voucher.Id, _dto, _stuff.Id, voucher.Quantity);
 
         }
 
@@ -108,14 +108,14 @@ namespace SuperMarket.Specs.Vouchers
             expected.StuffId.Should().Be(_dto.StuffId);
         }
 
-        //[And("کالایی با عنوان 'شیر' و کد کالا '100' باید موجودی '15' داشته باشد")]
-        //public void ThenAnd()
-        //{
-        //    var expected = _dataContext.Stuffs.FirstOrDefault();
-        //    expected.Title.Should().Be(_stuff.Title);
-        //    expected.Inventory.Should().Be(10);
+        [And("کالایی با عنوان 'شیر' و کد کالا '100' باید موجودی '15' داشته باشد")]
+        public void ThenAnd()
+        {
+            var expected = _dataContext.Stuffs.FirstOrDefault();
+            expected.Title.Should().Be(_stuff.Title);
+            expected.Inventory.Should().Be(15);
 
-        //}
+        }
         [Fact]
         public void Run()
         {
@@ -123,7 +123,7 @@ namespace SuperMarket.Specs.Vouchers
             , _ => GivenAnd()
             , _ => When()
             , _ => Then()
-   );
+   , _ => ThenAnd());
         }
     }
 }

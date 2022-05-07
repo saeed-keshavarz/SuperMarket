@@ -13,5 +13,6 @@ namespace SuperMarket.Services.Vouchers.Contracts
         void Add(Voucher voucher);
         Stuff GetStuffById(int stuffId);
         Voucher FindById(int id);
+        IList<Voucher> GetAllVouchers();
     }
 }

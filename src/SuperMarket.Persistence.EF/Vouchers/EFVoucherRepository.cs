@@ -27,6 +27,11 @@ namespace SuperMarket.Persistence.EF.Vouchers
             return _dataContext.Vouchers.Find(id);
         }
 
+        public IList<Voucher> GetAllVouchers()
+        {
+            return _dataContext.Vouchers.ToList();
+        }
+
         public Stuff GetStuffById(int stuffId)
         {
             return _dataContext.Stuffs.Find(stuffId);

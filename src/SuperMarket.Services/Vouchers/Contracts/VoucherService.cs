@@ -1,4 +1,5 @@
-﻿using SuperMarket.Infrastructure.Application;
+﻿using SuperMarket.Entities;
+using SuperMarket.Infrastructure.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SuperMarket.Services.Vouchers.Contracts
     public interface VoucherService : Service
     {
         void Add(AddVoucherDto dto, int stuffId);
-        void Update(int id, UpdateVoucherDto dto);
+        void Update(int id, UpdateVoucherDto dto, int stuffId, int quantity);
+        IList<Voucher> GetAllVouchers();
     }
 }
