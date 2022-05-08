@@ -13,5 +13,6 @@ namespace SuperMarket.Services.Vouchers.Contracts
         void Add(AddVoucherDto dto, int stuffId);
         void Update(int id, UpdateVoucherDto dto, int stuffId, int quantity);
         IList<Voucher> GetAllVouchers();
+        void Delete(int id, int stuffId, int quantity);
     }
 }

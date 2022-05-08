@@ -42,6 +42,16 @@ namespace SuperMarket.Services.Vouchers
             _unitOfWork.Commit();
         }
 
+        public void Delete(int id, int stuffId, int quantity)
+        {
+            var voucher = _repository.FindById(id);
+            var stuff = _repository.GetStuffById(stuffId);
+            stuff.Inventory -= quantity;
+
+            _repository.Delete(voucher);
+            _unitOfWork.Commit();
+        }
+
         public IList<Voucher> GetAllVouchers()
         {
             return _repository.GetAllVouchers();

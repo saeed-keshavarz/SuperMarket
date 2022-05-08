@@ -22,6 +22,11 @@ namespace SuperMarket.Persistence.EF.Invoices
             _dataContext.Invoices.Add(invoice);
         }
 
+        public void Delete(Invoice invoice)
+        {
+            _dataContext.Invoices.Remove(invoice);
+        }
+
         public Invoice FindById(int id)
         {
             return _dataContext.Invoices.Find(id);

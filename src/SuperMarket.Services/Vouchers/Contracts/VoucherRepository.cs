@@ -14,5 +14,6 @@ namespace SuperMarket.Services.Vouchers.Contracts
         Stuff GetStuffById(int stuffId);
         Voucher FindById(int id);
         IList<Voucher> GetAllVouchers();
+        void Delete(Voucher voucher);
     }
 }

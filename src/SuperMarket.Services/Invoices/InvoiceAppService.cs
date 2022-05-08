@@ -43,6 +43,16 @@ namespace SuperMarket.Services.Invoices
 
         }
 
+        public void Delete(int id, int stuffId, int quantity)
+        {
+            var invoice = _repository.FindById(id);
+            var stuff = _repository.GetStuffById(stuffId);
+            stuff.Inventory += quantity;
+
+            _repository.Delete(invoice);
+            _unitOfWork.Commit();
+        }
+
         public IList<Invoice> GetAllInvoices()
         {
             return _repository.GetAllInvoices();
