@@ -2,6 +2,7 @@
 using Supermarket.Test.Tools.Categories;
 using Supermarket.Test.Tools.Invoices;
 using Supermarket.Test.Tools.Stuffs;
+using Supermarket.Test.Tools.Vouchers;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -178,7 +179,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var voucher = CreateVoucher(stuff);
+            var voucher = VoucherFactory.CreateVoucher(stuff);
             _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
 
             Action expected = () => _sut.Delete(stuff.Id);
@@ -201,18 +202,6 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             Action expected = () => _sut.Delete(stuff.Id);
 
             expected.Should().ThrowExactly<CanNotDeleteStuffHasInvoiceException>();
-        }
-
-        private static Voucher CreateVoucher(Stuff stuff)
-        {
-            return new Voucher
-            {
-                Title = "سند: " + stuff.Title,
-                Date = new DateTime(1401, 02, 18),
-                Quantity = 10,
-                Price = 1000,
-                StuffId = stuff.Id,
-            };
         }
     }
 }
