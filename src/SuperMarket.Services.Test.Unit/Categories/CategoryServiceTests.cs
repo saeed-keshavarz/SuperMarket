@@ -6,6 +6,7 @@ using SuperMarket.Persistence.EF;
 using SuperMarket.Persistence.EF.Categories;
 using SuperMarket.Services.Categories;
 using SuperMarket.Services.Categories.Contracts;
+using SuperMarket.Services.Categories.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,17 @@ namespace SuperMarket.Services.Test.Unit.Categories
             var expected = _dataContext.Categories
                 .FirstOrDefault(_ => _.Id == category.Id);
             expected.Title.Should().Be(dto.Title);
+        }
+
+        [Fact]
+        public void Update_throw_CategoryNotFoundException_when_category_with_given_id_is_not_exist()
+        {
+            var dummyCategoryId = 1000;
+            var dto = GenerateUpdateCategoryDto("EditedDummy");
+
+            Action expected = () => _sut.Update(dummyCategoryId, dto);
+
+            expected.Should().ThrowExactly<CategoryNotFoundException>();
         }
 
         private static UpdateCategoryDto GenerateUpdateCategoryDto(string title)

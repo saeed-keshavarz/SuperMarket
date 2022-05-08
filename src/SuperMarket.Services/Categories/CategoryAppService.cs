@@ -72,6 +72,11 @@ namespace SuperMarket.Services.Categories
             }
 
             var category = _repository.FindById(id);
+
+            if(category == null)
+            {
+                throw new CategoryNotFoundException();
+            }
             category.Title = dto.Title;
             _unitOfWork.Commit();
         }
