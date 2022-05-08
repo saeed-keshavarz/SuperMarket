@@ -113,6 +113,23 @@ namespace SuperMarket.Services.Test.Unit.Categories
             expected.Should().ThrowExactly<CategoryNotFoundException>();
         }
 
+        [Fact]
+        public void Delete_delete_category_properly()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            _sut.Delete(category.Id);
+
+            _dataContext.Categories.Should().
+                NotContain(_ => _.Id == category.Id);
+
+        }
+
+
+
+
+
         private static UpdateCategoryDto GenerateUpdateCategoryDto(string title)
         {
             return new UpdateCategoryDto
