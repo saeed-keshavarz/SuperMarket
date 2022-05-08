@@ -14,5 +14,6 @@ namespace SuperMarket.Services.Invoices.Contracts
         Stuff GetStuffById(int stuffId);
         Invoice FindById(int id);
         IList<Invoice> GetAllInvoices();
+        void Delete(Invoice invoice);
     }
 }

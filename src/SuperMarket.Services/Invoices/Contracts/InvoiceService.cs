@@ -12,6 +12,7 @@ namespace SuperMarket.Services.Invoices.Contracts
     {
         void Add(AddInvoiceDto dto, int stuffId);
         void Update(int id, UpdateInvoiceDto dto, int stuffId, int quantity);
+        void Delete(int id, int stuffId, int quantity);
         IList<Invoice> GetAllInvoices();
     }
 }
