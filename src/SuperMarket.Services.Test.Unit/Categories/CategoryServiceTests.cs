@@ -123,7 +123,6 @@ namespace SuperMarket.Services.Test.Unit.Categories
 
             _dataContext.Categories.Should().
                 NotContain(_ => _.Id == category.Id);
-
         }
 
         [Fact]
@@ -136,8 +135,27 @@ namespace SuperMarket.Services.Test.Unit.Categories
             expected.Should().ThrowExactly<CategoryNotFoundException>();
         }
 
+        [Fact]
+        public void Delete_throw_CanNotDeleteCategoryHasStuffException_when_category_has_stuff()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            CreateStuff(category);
 
+        }
 
+        private static void CreateStuff(Category category)
+        {
+            var stuff = new Stuff
+            {
+                Title = "شیر",
+                Inventory = 20,
+                MinimumInventory = 20,
+                MaximumInventory = 50,
+                Unit = "پاکت",
+                CategoryId = category.Id,
+            };
+        }
 
         private static UpdateCategoryDto GenerateUpdateCategoryDto(string title)
         {
