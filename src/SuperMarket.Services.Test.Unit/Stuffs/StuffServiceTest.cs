@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -36,7 +37,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Add_add_stuff_properly()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             AddStuffDto dto = GenerateAddStuffDto(category, "شیر");
@@ -55,7 +56,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Add_throw_DuplicateStuffTitleInStuffException_when_add_new_stuff()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var stuff = CreateStuff(category, "پنیر");
@@ -71,7 +72,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void GetAll_returns_all_categories()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             CreateStuffsInDataBase(category.Id);
@@ -87,7 +88,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Update_update_stuff_properly()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var stuff = CreateStuff(category, "شیر");
@@ -106,7 +107,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Update_throw_DuplicateStuffTitleInStuffException_when_update_stuff()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var stuff1 = CreateStuff(category, "شیر");
@@ -126,7 +127,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Update_Throw_StuffNotFoundException_when_stuff_with_id_is_not_exist()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var dummyStuffId = 1000;
@@ -140,7 +141,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Delete_delete_stuff_properly()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var stuff = CreateStuff(category, "شیر");
@@ -155,7 +156,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Delete_throw_StuffNotFoundException_when_stuff_with_id_is_not_exist()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var dummyStuffId = 1000;
@@ -169,7 +170,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Delete_throw_CanNotDeleteStuffHasVoucherException_when_delete_stuff_has_voucher()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var stuff = CreateStuff(category, "شیر");
@@ -186,7 +187,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Delete_throw_CanNotDeleteStuffHasInvoiceException_when_delete_stuff_has_invoice()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var stuff = CreateStuff(category, "شیر");
@@ -276,13 +277,6 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             };
         }
 
-        public static Category CreateCategory(string title)
-        {
-            return new Category
-            {
-                Title = title
-            };
-        }
 
     }
 }

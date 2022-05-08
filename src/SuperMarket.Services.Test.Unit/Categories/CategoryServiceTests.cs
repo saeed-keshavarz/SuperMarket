@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -34,7 +35,7 @@ namespace SuperMarket.Services.Test.Unit.Categories
         [Fact]
         public void Add_adds_category_properly()
         {
-            AddCategoryDto dto = GenerateAddCategoryDto();
+            AddCategoryDto dto = CategoryFactory.GenerateAddCategoryDto();
 
             _sut.Add(dto);
 
@@ -45,21 +46,21 @@ namespace SuperMarket.Services.Test.Unit.Categories
         [Fact]
         public void Add_throw_DuplicateCategoryTitleException_when_add_new_Category()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            AddCategoryDto dto = GenerateAddCategoryDto();
+            AddCategoryDto dto = CategoryFactory.GenerateAddCategoryDto();
 
             Action expected = () => _sut.Add(dto);
 
             expected.Should().Throw<DuplicateCategoryTitleException>();
         }
 
-
         [Fact]
         public void GetAll_returns_all_categories()
         {
-            CreateCategoriesInDataBase();
+            var categories = CategoryFactory.CreateCategoriesInDataBase();
+            _dataContext.Manipulate(_ =>_.Categories.AddRange(categories));
 
             var expected = _sut.GetAll();
 
@@ -72,10 +73,10 @@ namespace SuperMarket.Services.Test.Unit.Categories
         [Fact]
         public void Update_updates_category_properly()
         {
-            var category = CreateCategory("Dummy");
+            var category = CategoryFactory.CreateCategory("Dummy");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var dto = GenerateUpdateCategoryDto("editedDummy");
+            var dto = CategoryFactory.GenerateUpdateCategoryDto("editedDummy");
 
             _sut.Update(category.Id, dto);
 
@@ -87,13 +88,13 @@ namespace SuperMarket.Services.Test.Unit.Categories
         [Fact]
         public void Update_throw_DuplicateCategoryTitleException_when_update_Category()
         {
-            var category1 = CreateCategory("لبنیات");
+            var category1 = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category1));
 
-            var category2 = CreateCategory("خشکبار");
+            var category2 = CategoryFactory.CreateCategory("خشکبار");
             _dataContext.Manipulate(_ => _.Categories.Add(category2));
 
-            var dto = GenerateUpdateCategoryDto("خشکبار");
+            var dto = CategoryFactory.GenerateUpdateCategoryDto("خشکبار");
 
             Action expected = () => _sut.Update(category1.Id, dto);
 
@@ -104,7 +105,7 @@ namespace SuperMarket.Services.Test.Unit.Categories
         public void Update_throw_CategoryNotFoundException_when_category_with_given_id_is_not_exist()
         {
             var dummyCategoryId = 1000;
-            var dto = GenerateUpdateCategoryDto("EditedDummy");
+            var dto = CategoryFactory.GenerateUpdateCategoryDto("EditedDummy");
 
             Action expected = () => _sut.Update(dummyCategoryId, dto);
 
@@ -114,7 +115,7 @@ namespace SuperMarket.Services.Test.Unit.Categories
         [Fact]
         public void Delete_delete_category_properly()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             _sut.Delete(category.Id);
@@ -136,7 +137,7 @@ namespace SuperMarket.Services.Test.Unit.Categories
         [Fact]
         public void Delete_throw_CanNotDeleteCategoryHasStuffException_when_category_has_stuff()
         {
-            var category = CreateCategory("لبنیات");
+            var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var stuff = CreateStuff(category);
@@ -157,41 +158,6 @@ namespace SuperMarket.Services.Test.Unit.Categories
                 MaximumInventory = 50,
                 Unit = "پاکت",
                 CategoryId = category.Id,
-            };
-        }
-
-        private static UpdateCategoryDto GenerateUpdateCategoryDto(string title)
-        {
-            return new UpdateCategoryDto
-            {
-                Title = title,
-            };
-        }
-
-        public static Category CreateCategory(string title)
-        {
-            return new Category
-            {
-                Title = title
-            };
-        }
-
-        private void CreateCategoriesInDataBase()
-        {
-            var categories = new List<Category>
-            {
-                new Category { Title = "dummy1"},
-                new Category { Title = "dummy2"},
-                new Category { Title = "dummy3"}
-            };
-            _dataContext.Manipulate(_ =>
-            _.Categories.AddRange(categories));
-        }
-        private static AddCategoryDto GenerateAddCategoryDto()
-        {
-            return new AddCategoryDto
-            {
-                Title = "لبنیات"
             };
         }
     }

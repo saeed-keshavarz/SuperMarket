@@ -5,10 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Categories\" />
     <Folder Include="Invoices\" />
     <Folder Include="Vouchers\" />
     <Folder Include="Stuffs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SuperMarket.Entities\SuperMarket.Entities.csproj" />
+    <ProjectReference Include="..\SuperMarket.Services\SuperMarket.Services.csproj" />
   </ItemGroup>
 
 </Project>
