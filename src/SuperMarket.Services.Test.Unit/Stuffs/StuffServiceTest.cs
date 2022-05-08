@@ -23,7 +23,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         private readonly StuffService _sut;
         private readonly StuffRepository _repository;
 
-        public  StuffServiceTest()
+        public StuffServiceTest()
         {
             _dataContext =
                new EFInMemoryDatabase()
@@ -39,17 +39,17 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-          AddStuffDto dto =  GenerateAddStuffDto(category, "شیر");
+            AddStuffDto dto = GenerateAddStuffDto(category, "شیر");
 
             _sut.Add(dto);
 
             _dataContext.Stuffs.Should()
-                .Contain(_ => 
+                .Contain(_ =>
                 _.Title == dto.Title &&
-                _.Inventory==dto.Inventory &&
+                _.Inventory == dto.Inventory &&
                 _.Unit == dto.Unit &&
-                _.MinimumInventory==dto.MinimumInventory &&
-                _.MaximumInventory==dto.MaximumInventory );
+                _.MinimumInventory == dto.MinimumInventory &&
+                _.MaximumInventory == dto.MaximumInventory);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var expected = _sut.GetAllStuff();
 
             expected.Should().HaveCount(3);
-            expected.Should().Contain(_ => _.Title == "شیر" && _.Inventory==10 && _.MinimumInventory==5 && _.MaximumInventory==50);
+            expected.Should().Contain(_ => _.Title == "شیر" && _.Inventory == 10 && _.MinimumInventory == 5 && _.MaximumInventory == 50);
             expected.Should().Contain(_ => _.Title == "پنیر" && _.Inventory == 20 && _.MinimumInventory == 5 && _.MaximumInventory == 50);
             expected.Should().Contain(_ => _.Title == "ماست" && _.Inventory == 30 && _.MinimumInventory == 5 && _.MaximumInventory == 50);
         }
@@ -93,12 +93,12 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var stuff = CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var dto = GenerateUpdateStuffSto("پنیر");
+            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
 
             _sut.Update(stuff.Id, dto);
 
             var expected = _dataContext.Stuffs
-                .FirstOrDefault(_ =>_.Id==stuff.Id);
+                .FirstOrDefault(_ => _.Id == stuff.Id);
 
             expected.Title.Should().Be(dto.Title);
         }
@@ -115,7 +115,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var stuff2 = CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff2));
 
-            var dto = GenerateUpdateStuffSto("پنیر");
+            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
 
             Action expected = () => _sut.Update(stuff1.Id, dto);
 
@@ -126,15 +126,35 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Update_Throw_StuffNotFoundException_when_stuff_with_id_is_not_exist()
         {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
             var dummyStuffId = 1000;
-             var dto = GenerateUpdateStuffSto("پنیر");
+            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
 
             Action expected = () => _sut.Update(dummyStuffId, dto);
 
             expected.Should().ThrowExactly<StuffNotFoundException>();
         }
 
-        private static UpdateStuffDto GenerateUpdateStuffSto(string title)
+        [Fact]
+        public void Delete_delete_stuff_properly()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            _sut.Delete(category.Id);
+
+            _dataContext.Stuffs.Should().
+                NotContain(_ => _.Id == stuff.Id);
+        }
+
+
+
+        private static UpdateStuffDto GenerateUpdateStuffDto(int categoryId, string title)
         {
             return new UpdateStuffDto
             {
@@ -142,9 +162,9 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
                 Unit = "پاکت",
                 MinimumInventory = 10,
                 MaximumInventory = 50,
+                CategoryId = categoryId,
             };
         }
-
 
         private void CreateStuffsInDataBase(int categoryId)
         {
