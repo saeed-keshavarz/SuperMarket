@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Supermarket.Test.Tools.Categories;
+using Supermarket.Test.Tools.Invoices;
 using Supermarket.Test.Tools.Stuffs;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
@@ -194,25 +195,12 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var invoice = CreateInvoice(stuff);
+            var invoice = InvoiceFactory.CreateInvoice(stuff);
             _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
 
             Action expected = () => _sut.Delete(stuff.Id);
 
             expected.Should().ThrowExactly<CanNotDeleteStuffHasInvoiceException>();
-        }
-
-        private static Invoice CreateInvoice(Stuff stuff)
-        {
-            return new Invoice
-            {
-                Title = "فاکتور: " + stuff.Title,
-                Date = new DateTime(1401, 02, 18),
-                Quantity = 10,
-                Price = 1000,
-                StuffId = stuff.Id,
-                Buyer = "کشاورز",
-            };
         }
 
         private static Voucher CreateVoucher(Stuff stuff)
