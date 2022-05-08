@@ -56,6 +56,36 @@ namespace SuperMarket.Services.Test.Unit.Categories
             expected.Should().Contain(_ => _.Title == "dummy3");
         }
 
+        [Fact]
+        public void Update_updates_category_properly()
+        {
+            var category = CreateCategory("Dummy");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var dto = GenerateUpdateCategoryDto("editedDummy");
+
+            _sut.Update(category.Id, dto);
+
+            var expected = _dataContext.Categories
+                .FirstOrDefault(_ => _.Id == category.Id);
+            expected.Title.Should().Be(dto.Title);
+        }
+
+        private static UpdateCategoryDto GenerateUpdateCategoryDto(string title)
+        {
+            return new UpdateCategoryDto
+            {
+                Title = title,
+            };
+        }
+
+        public static Category CreateCategory(string title)
+        {
+            return new Category
+            {
+                Title = title
+            };
+        }
 
         private void CreateCategoriesInDataBase()
         {
