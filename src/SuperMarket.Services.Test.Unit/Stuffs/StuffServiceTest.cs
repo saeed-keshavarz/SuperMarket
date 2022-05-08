@@ -39,7 +39,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-          AddStuffDto dto =  GenerateAddStuffDto(category);
+          AddStuffDto dto =  GenerateAddStuffDto(category, "شیر");
 
             _sut.Add(dto);
 
@@ -58,10 +58,10 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category);
+            var stuff = CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            AddStuffDto dto = GenerateAddStuffDto(category);
+            AddStuffDto dto = GenerateAddStuffDto(category, "پنیر");
 
             Action expected = () => _sut.Add(dto);
 
@@ -90,10 +90,10 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category);
+            var stuff = CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var dto = GenerateUpdateStuffSto();
+            var dto = GenerateUpdateStuffSto("پنیر");
 
             _sut.Update(stuff.Id, dto);
 
@@ -103,12 +103,33 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             expected.Title.Should().Be(dto.Title);
         }
 
+        [Fact]
+        public void Update_throw_DuplicateStuffTitleInStuffException_when_update_stuff()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-        private static UpdateStuffDto GenerateUpdateStuffSto()
+            var stuff1 = CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff1));
+
+            var stuff2 = CreateStuff(category, "پنیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff2));
+
+            var dto = GenerateUpdateStuffSto("پنیر");
+
+            Action expected = () => _sut.Update(stuff1.Id, dto);
+
+            expected.Should().Throw<DuplicateStuffTitleInStuffException>();
+
+        }
+
+
+
+        private static UpdateStuffDto GenerateUpdateStuffSto(string title)
         {
             return new UpdateStuffDto
             {
-                Title = "پنیر",
+                Title = title,
                 Unit = "پاکت",
                 MinimumInventory = 10,
                 MaximumInventory = 50,
@@ -128,11 +149,11 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             _.Stuffs.AddRange(stuffs));
         }
 
-        private static Stuff CreateStuff(Category category)
+        private static Stuff CreateStuff(Category category, string title)
         {
             return new Stuff
             {
-                Title = "شیر",
+                Title = title,
                 Inventory = 20,
                 MinimumInventory = 20,
                 MaximumInventory = 50,
@@ -141,11 +162,11 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             };
         }
 
-        private static AddStuffDto GenerateAddStuffDto(Category category)
+        private static AddStuffDto GenerateAddStuffDto(Category category, string title)
         {
             return new AddStuffDto
             {
-                Title = "شیر",
+                Title = title,
                 Inventory = 20,
                 MinimumInventory = 20,
                 MaximumInventory = 50,
