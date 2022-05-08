@@ -102,7 +102,7 @@ namespace SuperMarket.Specs.Stuffs
         [And("")]
         public void ThenAnd()
         {
-            expected.Should().ThrowExactly<DuplicateStuffTitleInCategoryException>();
+            expected.Should().ThrowExactly<DuplicateStuffTitleInStuffException>();
         }
 
         [Fact]

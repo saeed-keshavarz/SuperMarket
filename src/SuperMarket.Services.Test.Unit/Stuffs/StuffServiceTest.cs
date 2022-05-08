@@ -1,4 +1,5 @@
-﻿using SuperMarket.Entities;
+﻿using FluentAssertions;
+using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
@@ -36,12 +37,38 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         {
             var category = CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
-            GenerateAddStuffDto(category);
+
+          AddStuffDto dto =  GenerateAddStuffDto(category);
+
+            _sut.Add(dto);
+
+            _dataContext.Stuffs.Should()
+                .Contain(_ => 
+                _.Title == dto.Title &&
+                _.Inventory==dto.Inventory &&
+                _.Unit == dto.Unit &&
+                _.MinimumInventory==dto.MinimumInventory &&
+                _.MaximumInventory==dto.MaximumInventory );
         }
 
-        private static void GenerateAddStuffDto(Category category)
+        [Fact]
+        public void Add_throw_DuplicateStuffTitleInStuffException_when_add_new_stuff()
         {
-            AddStuffDto dto = new AddStuffDto
+
+        }
+
+
+
+
+
+
+
+
+
+
+        private static AddStuffDto GenerateAddStuffDto(Category category)
+        {
+            return new AddStuffDto
             {
                 Title = "شیر",
                 Inventory = 20,

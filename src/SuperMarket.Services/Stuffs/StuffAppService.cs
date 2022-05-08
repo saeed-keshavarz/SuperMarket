@@ -29,7 +29,7 @@ namespace SuperMarket.Services.Stuffs
 
             if (isTitleDuplicate)
             {
-                throw new DuplicateStuffTitleInCategoryException();
+                throw new DuplicateStuffTitleInStuffException();
             }
 
             var stuff = new Stuff
@@ -73,7 +73,7 @@ namespace SuperMarket.Services.Stuffs
 
             if (isTitleDuplicate)
             {
-                throw new DuplicateStuffTitleInCategoryException();
+                throw new DuplicateStuffTitleInStuffException();
             }
             var stuff = _repository.FindById(id);
             stuff.Title = dto.Title;

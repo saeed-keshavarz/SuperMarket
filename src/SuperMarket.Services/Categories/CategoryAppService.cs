@@ -43,7 +43,12 @@ namespace SuperMarket.Services.Categories
         {
            var category = _repository.FindById(id);
 
-            if(category.Stuffs.Count() > 0)
+            if (category == null)
+            {
+                throw new CategoryNotFoundException();
+            }
+
+            if (category.Stuffs.Count() > 0)
             {
                 throw new CanNotDeleteCategoryHasStuffException();
             }
