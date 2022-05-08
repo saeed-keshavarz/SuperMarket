@@ -10,8 +10,6 @@ using SuperMarket.Services.Categories.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SuperMarket.Services.Test.Unit.Categories
@@ -99,7 +97,6 @@ namespace SuperMarket.Services.Test.Unit.Categories
             Action expected = () => _sut.Update(category1.Id, dto);
 
             expected.Should().ThrowExactly<DuplicateCategoryTitleException>();
-
         }
 
         [Fact]
@@ -140,13 +137,18 @@ namespace SuperMarket.Services.Test.Unit.Categories
         {
             var category = CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
-            CreateStuff(category);
 
+            var stuff = CreateStuff(category);
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            Action expected = () => _sut.Delete(category.Id);
+
+            expected.Should().ThrowExactly<CanNotDeleteCategoryHasStuffException>();
         }
 
-        private static void CreateStuff(Category category)
+        private static Stuff CreateStuff(Category category)
         {
-            var stuff = new Stuff
+            return new Stuff
             {
                 Title = "شیر",
                 Inventory = 20,
