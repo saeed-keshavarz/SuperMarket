@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Supermarket.Test.Tools.Categories;
+using Supermarket.Test.Tools.Stuffs;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -140,25 +141,12 @@ namespace SuperMarket.Services.Test.Unit.Categories
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category);
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             Action expected = () => _sut.Delete(category.Id);
 
             expected.Should().ThrowExactly<CanNotDeleteCategoryHasStuffException>();
-        }
-
-        private static Stuff CreateStuff(Category category)
-        {
-            return new Stuff
-            {
-                Title = "شیر",
-                Inventory = 20,
-                MinimumInventory = 20,
-                MaximumInventory = 50,
-                Unit = "پاکت",
-                CategoryId = category.Id,
-            };
         }
     }
 }

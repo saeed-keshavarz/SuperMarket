@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Supermarket.Test.Tools.Categories;
+using Supermarket.Test.Tools.Stuffs;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -40,7 +41,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            AddStuffDto dto = GenerateAddStuffDto(category, "شیر");
+            AddStuffDto dto = StuffFactory.GenerateAddStuffDto(category, "شیر");
 
             _sut.Add(dto);
 
@@ -59,10 +60,10 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category, "پنیر");
+            var stuff = StuffFactory.CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            AddStuffDto dto = GenerateAddStuffDto(category, "پنیر");
+            AddStuffDto dto = StuffFactory.GenerateAddStuffDto(category, "پنیر");
 
             Action expected = () => _sut.Add(dto);
 
@@ -75,7 +76,8 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            CreateStuffsInDataBase(category.Id);
+            var stuffs = StuffFactory.CreateStuffsInDataBase(category.Id);
+            _dataContext.Manipulate(_ => _.Stuffs.AddRange(stuffs));
 
             var expected = _sut.GetAllStuff();
 
@@ -91,10 +93,10 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category, "شیر");
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
+            var dto = StuffFactory.GenerateUpdateStuffDto(category.Id, "پنیر");
 
             _sut.Update(stuff.Id, dto);
 
@@ -110,18 +112,17 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff1 = CreateStuff(category, "شیر");
+            var stuff1 = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff1));
 
-            var stuff2 = CreateStuff(category, "پنیر");
+            var stuff2 = StuffFactory.CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff2));
 
-            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
+            var dto = StuffFactory.GenerateUpdateStuffDto(category.Id, "پنیر");
 
             Action expected = () => _sut.Update(stuff1.Id, dto);
 
             expected.Should().Throw<DuplicateStuffTitleInCategoryException>();
-
         }
 
         [Fact]
@@ -131,7 +132,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var dummyStuffId = 1000;
-            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
+            var dto = StuffFactory.GenerateUpdateStuffDto(category.Id, "پنیر");
 
             Action expected = () => _sut.Update(dummyStuffId, dto);
 
@@ -144,7 +145,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category, "شیر");
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             _sut.Delete(category.Id);
@@ -160,7 +161,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
             var dummyStuffId = 1000;
-            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
+            var dto = StuffFactory.GenerateUpdateStuffDto(category.Id, "پنیر");
 
             Action expected = () => _sut.Delete(dummyStuffId);
 
@@ -173,7 +174,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category, "شیر");
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             var voucher = CreateVoucher(stuff);
@@ -190,7 +191,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = CreateStuff(category, "شیر");
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             var invoice = CreateInvoice(stuff);
@@ -199,7 +200,6 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             Action expected = () => _sut.Delete(stuff.Id);
 
             expected.Should().ThrowExactly<CanNotDeleteStuffHasInvoiceException>();
-
         }
 
         private static Invoice CreateInvoice(Stuff stuff)
@@ -226,57 +226,5 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
                 StuffId = stuff.Id,
             };
         }
-
-        private static UpdateStuffDto GenerateUpdateStuffDto(int categoryId, string title)
-        {
-            return new UpdateStuffDto
-            {
-                Title = title,
-                Unit = "پاکت",
-                MinimumInventory = 10,
-                MaximumInventory = 50,
-                CategoryId = categoryId,
-            };
-        }
-
-        private void CreateStuffsInDataBase(int categoryId)
-        {
-            var stuffs = new List<Stuff>
-            {
-                new Stuff { Title = "شیر", Inventory=10, MinimumInventory=5, MaximumInventory=50,Unit="عدد", CategoryId=categoryId},
-                new Stuff { Title = "پنیر", Inventory=20, MinimumInventory=5, MaximumInventory=50,Unit="بسته", CategoryId=categoryId},
-                new Stuff { Title = "ماست", Inventory=30, MinimumInventory=5, MaximumInventory=50,Unit="کیلوگرم", CategoryId=categoryId}
-            };
-            _dataContext.Manipulate(_ =>
-            _.Stuffs.AddRange(stuffs));
-        }
-
-        private static Stuff CreateStuff(Category category, string title)
-        {
-            return new Stuff
-            {
-                Title = title,
-                Inventory = 20,
-                MinimumInventory = 20,
-                MaximumInventory = 50,
-                Unit = "پاکت",
-                CategoryId = category.Id,
-            };
-        }
-
-        private static AddStuffDto GenerateAddStuffDto(Category category, string title)
-        {
-            return new AddStuffDto
-            {
-                Title = title,
-                Inventory = 20,
-                MinimumInventory = 20,
-                MaximumInventory = 50,
-                Unit = "پاکت",
-                CategoryId = category.Id,
-            };
-        }
-
-
     }
 }
