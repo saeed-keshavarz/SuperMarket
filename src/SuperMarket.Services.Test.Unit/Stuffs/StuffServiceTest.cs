@@ -183,6 +183,31 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             expected.Should().ThrowExactly<CanNotDeleteStuffHasVoucherException>();
         }
 
+        [Fact]
+        public void Delete_throw_CanNotDeleteStuffHasInvoiceException_when_delete_stuff_has_invoice()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+            CreateInvoice(stuff);
+
+        }
+
+        private static void CreateInvoice(Stuff stuff)
+        {
+            var invoice = new Invoice
+            {
+                Title = "فاکتور: " + stuff.Title,
+                Date = new DateTime(1401, 02, 18),
+                Quantity = 10,
+                Price = 1000,
+                StuffId = stuff.Id,
+                Buyer = "کشاورز",
+            };
+        }
+
         private static Voucher CreateVoucher(Stuff stuff)
         {
             return new Voucher
