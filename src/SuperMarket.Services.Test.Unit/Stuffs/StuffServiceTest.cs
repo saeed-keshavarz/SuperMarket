@@ -166,6 +166,35 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             expected.Should().ThrowExactly<StuffNotFoundException>();
         }
 
+        [Fact]
+        public void Delete_throw_CanNotDeleteStuffHasVoucherException_when_delete_stuff_has_voucher()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var voucher = CreateVoucher(stuff);
+            _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
+
+            Action expected = () => _sut.Delete(stuff.Id);
+
+            expected.Should().ThrowExactly<CanNotDeleteStuffHasVoucherException>();
+        }
+
+        private static Voucher CreateVoucher(Stuff stuff)
+        {
+            return new Voucher
+            {
+                Title = "سند: " + stuff.Title,
+                Date = new DateTime(1401, 02, 18),
+                Quantity = 10,
+                Price = 1000,
+                StuffId = stuff.Id,
+            };
+        }
+
         private static UpdateStuffDto GenerateUpdateStuffDto(int categoryId, string title)
         {
             return new UpdateStuffDto
