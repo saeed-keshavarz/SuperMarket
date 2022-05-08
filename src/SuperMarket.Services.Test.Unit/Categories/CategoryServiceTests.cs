@@ -47,6 +47,7 @@ namespace SuperMarket.Services.Test.Unit.Categories
         {
             var category = CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
+
             AddCategoryDto dto = GenerateAddCategoryDto();
 
             Action expected = () => _sut.Add(dto);
