@@ -12,5 +12,7 @@ namespace SuperMarket.Services.Invoices.Contracts
     {
         void Add(Invoice invoice);
         Stuff GetStuffById(int stuffId);
+        Invoice FindById(int id);
+        IList<Invoice> GetAllInvoices();
     }
 }

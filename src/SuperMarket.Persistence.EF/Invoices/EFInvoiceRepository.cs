@@ -22,6 +22,16 @@ namespace SuperMarket.Persistence.EF.Invoices
             _dataContext.Invoices.Add(invoice);
         }
 
+        public Invoice FindById(int id)
+        {
+            return _dataContext.Invoices.Find(id);
+        }
+
+        public IList<Invoice> GetAllInvoices()
+        {
+            return _dataContext.Invoices.ToList();
+        }
+
         public Stuff GetStuffById(int stuffId)
         {
             return _dataContext.Stuffs.Find(stuffId);

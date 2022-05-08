@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SuperMarket.Services.Invoices
 {
-    public class InvoiceAppService:InvoiceService
+    public class InvoiceAppService : InvoiceService
     {
         private readonly InvoiceRepository _repository;
         private readonly UnitOfWork _unitOfWork;
@@ -42,5 +42,38 @@ namespace SuperMarket.Services.Invoices
             _unitOfWork.Commit();
 
         }
+
+        public IList<Invoice> GetAllInvoices()
+        {
+            return _repository.GetAllInvoices();
+        }
+
+        public void Update(int id, UpdateInvoiceDto dto, int stuffId, int quantity)
+        {
+            var invoice = _repository.FindById(id);
+            invoice.Quantity = dto.Quantity;
+            invoice.StuffId = dto.StuffId;
+            invoice.Buyer = dto.Buyer;
+            invoice.Date = dto.Date;
+            invoice.Price = dto.Price;
+
+            if (stuffId != dto.StuffId)
+            {
+                var previousStuff = _repository.GetStuffById(stuffId);
+                previousStuff.Inventory += quantity;
+
+                var newStuff = _repository.GetStuffById(dto.StuffId);
+                newStuff.Inventory -= dto.Quantity;
+            }
+            else
+            {
+                var stuff = _repository.GetStuffById(stuffId);
+                stuff.Inventory += quantity;
+                stuff.Inventory -= dto.Quantity;
+            }
+
+            _unitOfWork.Commit();
+        }
     }
 }
+
