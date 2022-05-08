@@ -45,6 +45,19 @@ namespace SuperMarket.Services.Test.Unit.Categories
         }
 
         [Fact]
+        public void Add_throw_DuplicateCategoryTitleException_when_add_new_Category()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            AddCategoryDto dto = GenerateAddCategoryDto();
+
+            Action expected = () => _sut.Add(dto);
+
+            expected.Should().Throw<DuplicateCategoryTitleException>();
+        }
+
+
+        [Fact]
         public void GetAll_returns_all_categories()
         {
             CreateCategoriesInDataBase();
@@ -114,7 +127,7 @@ namespace SuperMarket.Services.Test.Unit.Categories
         {
             return new AddCategoryDto
             {
-                Title = "dummy"
+                Title = "لبنیات"
             };
         }
     }
