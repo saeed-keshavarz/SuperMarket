@@ -152,7 +152,19 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
                 NotContain(_ => _.Id == stuff.Id);
         }
 
+        [Fact]
+        public void Delete_throw_StuffNotFoundException_when_stuff_with_id_is_not_exist()
+        {
+            var category = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
 
+            var dummyStuffId = 1000;
+            var dto = GenerateUpdateStuffDto(category.Id, "پنیر");
+
+            Action expected = () => _sut.Delete(dummyStuffId);
+
+            expected.Should().ThrowExactly<StuffNotFoundException>();
+        }
 
         private static UpdateStuffDto GenerateUpdateStuffDto(int categoryId, string title)
         {
