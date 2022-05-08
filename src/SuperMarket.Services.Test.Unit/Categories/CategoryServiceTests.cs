@@ -86,6 +86,23 @@ namespace SuperMarket.Services.Test.Unit.Categories
         }
 
         [Fact]
+        public void Update_throw_DuplicateCategoryTitleException_when_update_Category()
+        {
+            var category1 = CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category1));
+
+            var category2 = CreateCategory("خشکبار");
+            _dataContext.Manipulate(_ => _.Categories.Add(category2));
+
+            var dto = GenerateUpdateCategoryDto("خشکبار");
+
+            Action expected = () => _sut.Update(category1.Id, dto);
+
+            expected.Should().ThrowExactly<DuplicateCategoryTitleException>();
+
+        }
+
+        [Fact]
         public void Update_throw_CategoryNotFoundException_when_category_with_given_id_is_not_exist()
         {
             var dummyCategoryId = 1000;
