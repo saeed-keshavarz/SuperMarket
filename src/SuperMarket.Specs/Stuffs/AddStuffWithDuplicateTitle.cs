@@ -96,7 +96,7 @@ namespace SuperMarket.Specs.Stuffs
         [And("خطایی با عنوان ‘عنوان کالا تکراریست ‘ باید رخ دهد")]
         public void ThenAnd()
         {
-            expected.Should().ThrowExactly<DuplicateStuffTitleInStuffException>();
+            expected.Should().ThrowExactly<DuplicateStuffTitleInCategoryException>();
         }
 
         [Fact]

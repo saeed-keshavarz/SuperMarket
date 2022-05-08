@@ -65,7 +65,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
 
             Action expected = () => _sut.Add(dto);
 
-            expected.Should().Throw<DuplicateStuffTitleInStuffException>();
+            expected.Should().Throw<DuplicateStuffTitleInCategoryException>();
         }
 
         [Fact]
@@ -119,11 +119,20 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
 
             Action expected = () => _sut.Update(stuff1.Id, dto);
 
-            expected.Should().Throw<DuplicateStuffTitleInStuffException>();
+            expected.Should().Throw<DuplicateStuffTitleInCategoryException>();
 
         }
 
+        [Fact]
+        public void Update_Throw_StuffNotFoundException_when_stuff_with_id_is_not_exist()
+        {
+            var dummyStuffId = 1000;
+             var dto = GenerateUpdateStuffSto("پنیر");
 
+            Action expected = () => _sut.Update(dummyStuffId, dto);
+
+            expected.Should().ThrowExactly<StuffNotFoundException>();
+        }
 
         private static UpdateStuffDto GenerateUpdateStuffSto(string title)
         {

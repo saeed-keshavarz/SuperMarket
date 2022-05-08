@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SuperMarket.Services.Stuffs.Exceptions
 {
-    public class DuplicateStuffTitleInCategoryException:Exception
+    public class StuffNotFoundException:Exception
     {
     }
 }

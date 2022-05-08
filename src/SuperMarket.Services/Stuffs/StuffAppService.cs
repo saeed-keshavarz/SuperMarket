@@ -29,7 +29,7 @@ namespace SuperMarket.Services.Stuffs
 
             if (isTitleDuplicate)
             {
-                throw new DuplicateStuffTitleInStuffException();
+                throw new DuplicateStuffTitleInCategoryException();
             }
 
             var stuff = new Stuff
@@ -49,10 +49,16 @@ namespace SuperMarket.Services.Stuffs
         {
             var stuff = _repository.FindById(id);
 
+            if(stuff == null)
+            {
+                throw new StuffNotFoundException();
+            }
+
             if(stuff.Vouchers.Count() > 0)
             {
                 throw new CanNotDeleteStuffHasVoucherException();
             }
+
             if (stuff.Invoces.Count() > 0)
             {
                 throw new CanNotDeleteStuffHasInvoiceException();
@@ -73,9 +79,16 @@ namespace SuperMarket.Services.Stuffs
 
             if (isTitleDuplicate)
             {
-                throw new DuplicateStuffTitleInStuffException();
+                throw new DuplicateStuffTitleInCategoryException();
             }
+
             var stuff = _repository.FindById(id);
+            
+            if (stuff == null)
+            {
+                throw new StuffNotFoundException();
+            }
+
             stuff.Title = dto.Title;
             _unitOfWork.Commit();
         }
