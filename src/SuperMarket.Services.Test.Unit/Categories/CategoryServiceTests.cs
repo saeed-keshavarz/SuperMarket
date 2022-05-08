@@ -126,6 +126,15 @@ namespace SuperMarket.Services.Test.Unit.Categories
 
         }
 
+        [Fact]
+        public void Delete_throw_CategoryNotFoundException_when_category_with_given_id_is_not_exist()
+        {
+            var dummyCategoryId = 1000;
+
+            Action expected = () => _sut.Delete(dummyCategoryId);
+
+            expected.Should().ThrowExactly<CategoryNotFoundException>();
+        }
 
 
 
