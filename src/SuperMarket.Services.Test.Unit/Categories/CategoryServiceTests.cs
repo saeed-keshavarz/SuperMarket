@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
@@ -42,6 +43,31 @@ namespace SuperMarket.Services.Test.Unit.Categories
                 .Contain(_ => _.Title == dto.Title);
         }
 
+        [Fact]
+        public void GetAll_returns_all_categories()
+        {
+            CreateCategoriesInDataBase();
+
+            var expected = _sut.GetAll();
+
+            expected.Should().HaveCount(3);
+            expected.Should().Contain(_ => _.Title == "dummy1");
+            expected.Should().Contain(_ => _.Title == "dummy2");
+            expected.Should().Contain(_ => _.Title == "dummy3");
+        }
+
+
+        private void CreateCategoriesInDataBase()
+        {
+            var categories = new List<Category>
+            {
+                new Category { Title = "dummy1"},
+                new Category { Title = "dummy2"},
+                new Category { Title = "dummy3"}
+            };
+            _dataContext.Manipulate(_ =>
+            _.Categories.AddRange(categories));
+        }
         private static AddCategoryDto GenerateAddCategoryDto()
         {
             return new AddCategoryDto
