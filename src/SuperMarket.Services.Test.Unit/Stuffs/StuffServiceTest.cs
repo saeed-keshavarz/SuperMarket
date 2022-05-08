@@ -191,13 +191,19 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
 
             var stuff = CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
-            CreateInvoice(stuff);
+
+            var invoice = CreateInvoice(stuff);
+            _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
+
+            Action expected = () => _sut.Delete(stuff.Id);
+
+            expected.Should().ThrowExactly<CanNotDeleteStuffHasInvoiceException>();
 
         }
 
-        private static void CreateInvoice(Stuff stuff)
+        private static Invoice CreateInvoice(Stuff stuff)
         {
-            var invoice = new Invoice
+            return new Invoice
             {
                 Title = "فاکتور: " + stuff.Title,
                 Date = new DateTime(1401, 02, 18),
