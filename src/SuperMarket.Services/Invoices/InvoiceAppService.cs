@@ -47,6 +47,12 @@ namespace SuperMarket.Services.Invoices
         public void Delete(int id, int stuffId, int quantity)
         {
             var invoice = _repository.FindById(id);
+
+            if(invoice == null)
+            {
+                throw new InvoiceNotFoundException();
+            }
+
             var stuff = _repository.GetStuffById(stuffId);
             stuff.Inventory += quantity;
 

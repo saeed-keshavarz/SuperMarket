@@ -44,7 +44,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var stuff = StuffFactory.CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            AddInvoiceDto dto = GenerateAddInvoiceDto(stuff, "فاکتور پنیر");
+            AddInvoiceDto dto = InvoiceFactory.GenerateAddInvoiceDto(stuff, "فاکتور پنیر");
 
             _sut.Add(dto, stuff.Id);
 
@@ -70,7 +70,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var stuff = StuffFactory.CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var invoices = CreateInvoicesInDataBase(stuff.Id);
+            var invoices = InvoiceFactory.CreateInvoicesInDataBase(stuff.Id);
             _dataContext.Manipulate(_ => _.Invoices.AddRange(invoices));
 
             var expected = _sut.GetAllInvoices();
@@ -93,7 +93,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var invoice = InvoiceFactory.CreateInvoice(stuff);
             _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
 
-            var dto = GenerateUpdateInvoiceDto(stuff.Id, "فاکتور شیر");
+            var dto = InvoiceFactory.GenerateUpdateInvoiceDto(stuff.Id, "فاکتور شیر");
 
             _sut.Update(invoice.Id, dto, stuff.Id, invoice.Quantity);
 
@@ -117,7 +117,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
 
             var dummyInvoiceId = 1000;
             var dummyQuantity = 10;
-            var dto = GenerateUpdateInvoiceDto(stuff.Id, "سند شیر");
+            var dto = InvoiceFactory.GenerateUpdateInvoiceDto(stuff.Id, "سند شیر");
 
             Action expected = () => _sut.Update(dummyInvoiceId, dto, stuff.Id, dummyQuantity);
 
@@ -147,42 +147,17 @@ namespace SuperMarket.Services.Test.Unit.Invoices
                 .NotContain(_ => _.Id == invoice.Id);
         }
 
-
-        private UpdateInvoiceDto GenerateUpdateInvoiceDto(int stuffId, string title)
+        [Fact]
+        public void Delete_throw_InvoiceNotFoundException_when_invoice_with_id_is_not_exist()
         {
-            return new UpdateInvoiceDto
-            {
-                Title = title,
-                Date = new DateTime(1401, 02, 20),
-                Price = 2000,
-                Quantity = 20,
-                Buyer = "کشاورز",
-                StuffId = stuffId,
-            };
-        }
+            var stuffId = 10;
+            var quantity = 10;
+            var dummyInvoiceId = 1000;
 
-        private List<Invoice> CreateInvoicesInDataBase(int stuffId)
-        {
-            return new List<Invoice>
-            {
-                new Invoice {Title="فاکتور شیر", Date =new DateTime(1401, 02, 18), Quantity=10,StuffId=stuffId,Price=1000 },
-                new Invoice {Title="فاکتور ماست", Date =new DateTime(1401, 02, 19), Quantity=20,StuffId=stuffId,Price=2000 },
-                new Invoice {Title="فاکتور پنیر", Date =new DateTime(1401, 02, 20), Quantity=30,StuffId=stuffId,Price=3000 },
-            };
-        }
+            Action expected = () => _sut.Delete(dummyInvoiceId, stuffId, quantity);
 
-        private AddInvoiceDto GenerateAddInvoiceDto(Stuff stuff, string title)
-        {
-            return new AddInvoiceDto
-            {
-                Title = title,
-                Date = new DateTime(1401, 02, 18),
-                Quantity = 10,
-                Price = 1000,
-                Buyer="کشاورز",
-                StuffId = stuff.Id,
-            };
-        }
+            expected.Should().ThrowExactly<InvoiceNotFoundException>();
+        } 
     }
     
 }
