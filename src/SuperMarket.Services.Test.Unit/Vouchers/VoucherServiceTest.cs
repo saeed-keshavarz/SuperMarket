@@ -23,8 +23,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
         private readonly VoucherRepository _repository;
         public VoucherServiceTest()
         {
-            _dataContext =
-                           new EFInMemoryDatabase()
+            _dataContext = new EFInMemoryDatabase()
                            .CreateDataContext<EFDataContext>();
             _unitOfWork = new EFUnitOfWork(_dataContext);
             _repository = new EFVoucherRepository(_dataContext);

@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Invoices\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SuperMarket.Infrastructure\SuperMarket.Infrastructure.csproj" />
     <ProjectReference Include="..\SuperMarket.Persistence.EF\SuperMarket.Persistence.EF.csproj" />
     <ProjectReference Include="..\Supermarket.Test.Tools\Supermarket.Test.Tools.csproj" />
