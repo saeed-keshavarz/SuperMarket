@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Supermarket.Test.Tools.Categories;
 using Supermarket.Test.Tools.Stuffs;
+using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
@@ -51,6 +52,36 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
                 _.Date==dto.Date &&
                 _.Quantity==dto.Quantity &&
                 _.Price==dto.Price);
+        }
+
+        [Fact]
+        public void GetAll_returns_all_voucher()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "پنیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var vouchers = CreateVouchersInDataBase(stuff.Id);
+            _dataContext.Manipulate(_ => _.Vouchers.AddRange(vouchers));
+
+            var expected = _sut.GetAllVouchers();
+
+            expected.Should().HaveCount(3);
+            expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 10 && _.Price == 1000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "سند ماست" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "سند پنیر" && _.Quantity == 30 && _.Price == 3000 && _.StuffId == stuff.Id);
+        }
+
+        private List<Voucher> CreateVouchersInDataBase(int stuffId)
+        {
+            return new List<Voucher>
+            {
+                new Voucher {Title="سند شیر", Date =new DateTime(1401, 02, 18), Quantity=10,StuffId=stuffId,Price=1000 },
+                new Voucher {Title="سند ماست", Date =new DateTime(1401, 02, 19), Quantity=20,StuffId=stuffId,Price=2000 },
+                new Voucher {Title="سند پنیر", Date =new DateTime(1401, 02, 20), Quantity=30,StuffId=stuffId,Price=3000 },
+            };
         }
 
         private AddVoucherDto GenerateAddVoucherDto(Entities.Stuff stuff, string title)
