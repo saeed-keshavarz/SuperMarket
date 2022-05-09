@@ -2,7 +2,6 @@
 using Supermarket.Test.Tools.Categories;
 using Supermarket.Test.Tools.Stuffs;
 using Supermarket.Test.Tools.Vouchers;
-using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
@@ -11,10 +10,7 @@ using SuperMarket.Services.Vouchers;
 using SuperMarket.Services.Vouchers.Contracts;
 using SuperMarket.Services.Vouchers.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SuperMarket.Services.Test.Unit.Vouchers
@@ -44,16 +40,16 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var stuff = StuffFactory.CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            AddVoucherDto dto = GenerateAddVoucherDto(stuff, stuff.Title);
+            AddVoucherDto dto = VoucherFactory.GenerateAddVoucherDto(stuff, stuff.Title);
 
-            _sut.Add(dto,stuff.Id);
+            _sut.Add(dto, stuff.Id);
 
             _dataContext.Vouchers.Should()
                 .Contain(_ =>
                 _.Title == dto.Title &&
-                _.Date==dto.Date &&
-                _.Quantity==dto.Quantity &&
-                _.Price==dto.Price);
+                _.Date == dto.Date &&
+                _.Quantity == dto.Quantity &&
+                _.Price == dto.Price);
 
             _dataContext.Stuffs.Should()
                 .Contain(_ =>
@@ -69,7 +65,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var stuff = StuffFactory.CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var vouchers = CreateVouchersInDataBase(stuff.Id);
+            var vouchers = VoucherFactory.CreateVouchersInDataBase(stuff.Id);
             _dataContext.Manipulate(_ => _.Vouchers.AddRange(vouchers));
 
             var expected = _sut.GetAllVouchers();
@@ -92,12 +88,12 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var voucher = VoucherFactory.CreateVoucher(stuff);
             _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
 
-            var dto = GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
+            var dto = VoucherFactory.GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
 
             _sut.Update(voucher.Id, dto, stuff.Id, voucher.Quantity);
 
             var expected = _dataContext.Vouchers
-                .FirstOrDefault(_=>_.Id==voucher.Id);
+                .FirstOrDefault(_ => _.Id == voucher.Id);
             expected.Title.Should().Be(dto.Title);
             expected.Date.Should().Be(dto.Date);
             expected.Price.Should().Be(dto.Price);
@@ -116,7 +112,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
 
             var dummyVoucherId = 1000;
             var dummyQuantity = 10;
-            var dto = GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
+            var dto = VoucherFactory.GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
 
             Action expected = () => _sut.Update(dummyVoucherId, dto, stuff.Id, dummyQuantity);
 
@@ -143,46 +139,19 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             expected.Inventory.Should().Be(10);
 
             _dataContext.Vouchers.Should()
-                .NotContain(_=>_.Id == voucher.Id);
-
-            
+                .NotContain(_ => _.Id == voucher.Id);
         }
 
-
-
-
-        private UpdateVoucherDto GenerateUpdateVoucherDto(int stuffId, string title)
+        [Fact]
+        public void Delete_throw_VoucherNotFoundException_when_voucher_with_id_is_not_exist()
         {
-            return new UpdateVoucherDto
-            {
-                Title =  title,
-                Date = new DateTime(1401, 02, 20),
-                Price = 2000,
-                Quantity = 20,
-                StuffId = stuffId,
-            };
-        }
+            var stuffId = 10;
+            var quantity = 10;
+            var dummyVoucherId = 1000;
 
-        private List<Voucher> CreateVouchersInDataBase(int stuffId)
-        {
-            return new List<Voucher>
-            {
-                new Voucher {Title="سند شیر", Date =new DateTime(1401, 02, 18), Quantity=10,StuffId=stuffId,Price=1000 },
-                new Voucher {Title="سند ماست", Date =new DateTime(1401, 02, 19), Quantity=20,StuffId=stuffId,Price=2000 },
-                new Voucher {Title="سند پنیر", Date =new DateTime(1401, 02, 20), Quantity=30,StuffId=stuffId,Price=3000 },
-            };
-        }
+            Action expected = () => _sut.Delete(dummyVoucherId, stuffId, quantity);
 
-        private AddVoucherDto GenerateAddVoucherDto(Entities.Stuff stuff, string title)
-        {
-            return new AddVoucherDto
-            {
-                Title = "سند: " + stuff.Title,
-                Date = new DateTime(1401, 02, 18),
-                Quantity = 10,
-                Price = 1000,
-                StuffId = stuff.Id,
-            };
+            expected.Should().ThrowExactly<VoucherNotFoundException>();
         }
     }
 }

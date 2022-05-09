@@ -46,6 +46,12 @@ namespace SuperMarket.Services.Vouchers
         public void Delete(int id, int stuffId, int quantity)
         {
             var voucher = _repository.FindById(id);
+
+            if (voucher == null)
+            {
+                throw new VoucherNotFoundException();
+            }
+
             var stuff = _repository.GetStuffById(stuffId);
             stuff.Inventory -= quantity;
 

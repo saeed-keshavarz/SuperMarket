@@ -159,11 +159,7 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         [Fact]
         public void Delete_throw_StuffNotFoundException_when_stuff_with_id_is_not_exist()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-
             var dummyStuffId = 1000;
-            var dto = StuffFactory.GenerateUpdateStuffDto(category.Id, "پنیر");
 
             Action expected = () => _sut.Delete(dummyStuffId);
 
