@@ -26,7 +26,7 @@ namespace Supermarket.Test.Tools.Vouchers
         {
             return new AddVoucherDto
             {
-                Title = "سند: " + stuff.Title,
+                Title = title,
                 Date = new DateTime(1401, 02, 18),
                 Quantity = 10,
                 Price = 1000,

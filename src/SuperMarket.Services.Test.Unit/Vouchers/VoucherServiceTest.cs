@@ -39,7 +39,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var stuff = StuffFactory.CreateStuff(category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            AddVoucherDto dto = VoucherFactory.GenerateAddVoucherDto(stuff, stuff.Title);
+            AddVoucherDto dto = VoucherFactory.GenerateAddVoucherDto(stuff, "سند پنیر");
 
             _sut.Add(dto, stuff.Id);
 
