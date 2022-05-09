@@ -124,6 +124,30 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             expected.Should().ThrowExactly<InvoiceNotFoundException>();
         }
 
+        [Fact]
+        public void Delete_delete_invoice_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var invoice = InvoiceFactory.CreateInvoice(stuff);
+            _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
+
+            _sut.Delete(invoice.Id, stuff.Id, invoice.Quantity);
+
+            var expected = _dataContext.Stuffs
+                .FirstOrDefault(_ => _.Id == stuff.Id);
+
+            expected.Inventory.Should().Be(30);
+
+            _dataContext.Invoices.Should()
+                .NotContain(_ => _.Id == invoice.Id);
+        }
+
+
         private UpdateInvoiceDto GenerateUpdateInvoiceDto(int stuffId, string title)
         {
             return new UpdateInvoiceDto
