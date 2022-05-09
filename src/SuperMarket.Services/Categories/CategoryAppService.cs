@@ -39,24 +39,6 @@ namespace SuperMarket.Services.Categories
             _unitOfWork.Commit();
         }
 
-        public void Delete(int id)
-        {
-           var category = _repository.FindById(id);
-
-            if (category == null)
-            {
-                throw new CategoryNotFoundException();
-            }
-
-            if (category.Stuffs.Count() > 0)
-            {
-                throw new CanNotDeleteCategoryHasStuffException();
-            }
-
-            _repository.Delete(category);
-            _unitOfWork.Commit();
-        }
-
         public IList<Category> GetAll()
         {
             return _repository.GetAll();
@@ -83,6 +65,24 @@ namespace SuperMarket.Services.Categories
                 throw new CategoryNotFoundException();
             }
             category.Title = dto.Title;
+            _unitOfWork.Commit();
+        }
+
+        public void Delete(int id)
+        {
+            var category = _repository.FindById(id);
+
+            if (category == null)
+            {
+                throw new CategoryNotFoundException();
+            }
+
+            if (category.Stuffs.Count() > 0)
+            {
+                throw new CanNotDeleteCategoryHasStuffException();
+            }
+
+            _repository.Delete(category);
             _unitOfWork.Commit();
         }
     }
