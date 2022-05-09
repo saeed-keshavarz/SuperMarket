@@ -56,7 +56,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
         }
 
         [Fact]
-        public void GetAll_returns_all_voucher()
+        public void GetAll_returns_all_vouchers()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));

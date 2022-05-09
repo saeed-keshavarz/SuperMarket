@@ -59,7 +59,35 @@ namespace SuperMarket.Services.Test.Unit.Invoices
                 _.Inventory == 10);
         }
 
+        [Fact]
+        public void GetAll_returns_all_invoices()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
 
+            var stuff = StuffFactory.CreateStuff(category, "پنیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var invoices = CreateInvoicesInDataBase(stuff.Id);
+            _dataContext.Manipulate(_ => _.Invoices.AddRange(invoices));
+
+            var expected = _sut.GetAllInvoices();
+
+            expected.Should().HaveCount(3);
+            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 10 && _.Price == 1000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "فاکتور ماست" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "فاکتور پنیر" && _.Quantity == 30 && _.Price == 3000 && _.StuffId == stuff.Id);
+        }
+
+        private List<Invoice> CreateInvoicesInDataBase(int stuffId)
+        {
+            return new List<Invoice>
+            {
+                new Invoice {Title="فاکتور شیر", Date =new DateTime(1401, 02, 18), Quantity=10,StuffId=stuffId,Price=1000 },
+                new Invoice {Title="فاکتور ماست", Date =new DateTime(1401, 02, 19), Quantity=20,StuffId=stuffId,Price=2000 },
+                new Invoice {Title="فاکتور پنیر", Date =new DateTime(1401, 02, 20), Quantity=30,StuffId=stuffId,Price=3000 },
+            };
+        }
 
         private AddInvoiceDto GenerateAddInvoiceDto(Stuff stuff, string title)
         {
