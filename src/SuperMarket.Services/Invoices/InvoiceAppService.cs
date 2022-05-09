@@ -1,6 +1,7 @@
 ﻿using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Services.Invoices.Contracts;
+using SuperMarket.Services.Invoices.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,12 @@ namespace SuperMarket.Services.Invoices
         public void Update(int id, UpdateInvoiceDto dto, int stuffId, int quantity)
         {
             var invoice = _repository.FindById(id);
+
+            if (invoice == null)
+            {
+                throw new InvoiceNotFoundException();
+            }
+
             invoice.Title = dto.Title;
             invoice.Quantity = dto.Quantity;
             invoice.StuffId = dto.StuffId;

@@ -9,6 +9,7 @@ using SuperMarket.Persistence.EF;
 using SuperMarket.Persistence.EF.Invoices;
 using SuperMarket.Services.Invoices;
 using SuperMarket.Services.Invoices.Contracts;
+using SuperMarket.Services.Invoices.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,6 +104,24 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             expected.Price.Should().Be(dto.Price);
             expected.Quantity.Should().Be(dto.Quantity);
             expected.Stuff.Inventory.Should().Be(10);
+        }
+
+        [Fact]
+        public void Update_Throw_InvoiceNotFoundException_when_invoice_with_id_is_not_exist()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var dummyInvoiceId = 1000;
+            var dummyQuantity = 10;
+            var dto = GenerateUpdateInvoiceDto(stuff.Id, "سند شیر");
+
+            Action expected = () => _sut.Update(dummyInvoiceId, dto, stuff.Id, dummyQuantity);
+
+            expected.Should().ThrowExactly<InvoiceNotFoundException>();
         }
 
         private UpdateInvoiceDto GenerateUpdateInvoiceDto(int stuffId, string title)
