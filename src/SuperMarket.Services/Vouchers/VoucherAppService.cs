@@ -72,7 +72,7 @@ namespace SuperMarket.Services.Vouchers
             {
                 throw new VoucherNotFoundException();
             }
-
+            voucher.Title = dto.Title;
             voucher.Quantity = dto.Quantity;
             voucher.StuffId = dto.StuffId;
             voucher.Date = dto.Date;

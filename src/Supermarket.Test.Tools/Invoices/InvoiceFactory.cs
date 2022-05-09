@@ -13,7 +13,7 @@ namespace Supermarket.Test.Tools.Invoices
         {
             return new Invoice
             {
-                Title = "فاکتور: " + stuff.Title,
+                Title = "فاکتور " + stuff.Title,
                 Date = new DateTime(1401, 02, 18),
                 Quantity = 10,
                 Price = 1000,

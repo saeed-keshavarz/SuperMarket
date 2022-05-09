@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Supermarket.Test.Tools.Categories;
+using Supermarket.Test.Tools.Invoices;
 using Supermarket.Test.Tools.Stuffs;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
@@ -77,6 +78,44 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 10 && _.Price == 1000 && _.StuffId == stuff.Id);
             expected.Should().Contain(_ => _.Title == "فاکتور ماست" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
             expected.Should().Contain(_ => _.Title == "فاکتور پنیر" && _.Quantity == 30 && _.Price == 3000 && _.StuffId == stuff.Id);
+        }
+
+        [Fact]
+        public void Update_update_invoice_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var invoice = InvoiceFactory.CreateInvoice(stuff);
+            _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
+
+            var dto = GenerateUpdateInvoiceDto(stuff.Id, "فاکتور شیر");
+
+            _sut.Update(invoice.Id, dto, stuff.Id, invoice.Quantity);
+
+            var expected = _dataContext.Invoices
+                .FirstOrDefault(_ => _.Id == invoice.Id);
+            expected.Title.Should().Be(dto.Title);
+            expected.Date.Should().Be(dto.Date);
+            expected.Price.Should().Be(dto.Price);
+            expected.Quantity.Should().Be(dto.Quantity);
+            expected.Stuff.Inventory.Should().Be(10);
+        }
+
+        private UpdateInvoiceDto GenerateUpdateInvoiceDto(int stuffId, string title)
+        {
+            return new UpdateInvoiceDto
+            {
+                Title = title,
+                Date = new DateTime(1401, 02, 20),
+                Price = 2000,
+                Quantity = 20,
+                Buyer = "کشاورز",
+                StuffId = stuffId,
+            };
         }
 
         private List<Invoice> CreateInvoicesInDataBase(int stuffId)

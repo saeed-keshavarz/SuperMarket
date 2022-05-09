@@ -61,6 +61,7 @@ namespace SuperMarket.Services.Invoices
         public void Update(int id, UpdateInvoiceDto dto, int stuffId, int quantity)
         {
             var invoice = _repository.FindById(id);
+            invoice.Title = dto.Title;
             invoice.Quantity = dto.Quantity;
             invoice.StuffId = dto.StuffId;
             invoice.Buyer = dto.Buyer;
