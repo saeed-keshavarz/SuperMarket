@@ -102,10 +102,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             expected.Date.Should().Be(dto.Date);
             expected.Price.Should().Be(dto.Price);
             expected.Quantity.Should().Be(dto.Quantity);
-
-            _dataContext.Stuffs.Should()
-                .Contain(_ =>
-                _.Inventory == 30);
+            expected.Stuff.Inventory.Should().Be(30);
         }
 
         [Fact]
@@ -126,6 +123,34 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             expected.Should().ThrowExactly<VoucherNotFoundException>();
         }
 
+        [Fact]
+        public void Delete_delete_voucher_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var voucher = VoucherFactory.CreateVoucher(stuff);
+            _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
+
+            _sut.Delete(voucher.Id, stuff.Id, voucher.Quantity);
+
+            var expected = _dataContext.Stuffs
+                .FirstOrDefault(_ => _.Id == stuff.Id);
+
+            expected.Inventory.Should().Be(10);
+
+            _dataContext.Vouchers.Should()
+                .NotContain(_=>_.Id == voucher.Id);
+
+            
+        }
+
+
+
+
         private UpdateVoucherDto GenerateUpdateVoucherDto(int stuffId, string title)
         {
             return new UpdateVoucherDto
@@ -137,8 +162,6 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
                 StuffId = stuffId,
             };
         }
-
-     
 
         private List<Voucher> CreateVouchersInDataBase(int stuffId)
         {
