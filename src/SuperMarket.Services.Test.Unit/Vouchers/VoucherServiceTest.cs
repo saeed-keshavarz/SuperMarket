@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Supermarket.Test.Tools.Categories;
 using Supermarket.Test.Tools.Stuffs;
+using Supermarket.Test.Tools.Vouchers;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -52,6 +53,10 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
                 _.Date==dto.Date &&
                 _.Quantity==dto.Quantity &&
                 _.Price==dto.Price);
+
+            _dataContext.Stuffs.Should()
+                .Contain(_ =>
+                _.Inventory == 30);
         }
 
         [Fact]
@@ -72,6 +77,48 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 10 && _.Price == 1000 && _.StuffId == stuff.Id);
             expected.Should().Contain(_ => _.Title == "سند ماست" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
             expected.Should().Contain(_ => _.Title == "سند پنیر" && _.Quantity == 30 && _.Price == 3000 && _.StuffId == stuff.Id);
+        }
+
+        [Fact]
+        public void Update_update_stuff_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var voucher = VoucherFactory.CreateVoucher(stuff);
+            _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
+
+            var dto = GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
+
+            _sut.Update(voucher.Id, dto, stuff.Id, voucher.Quantity);
+
+            var expected = _dataContext.Vouchers
+                .FirstOrDefault(_=>_.Id==voucher.Id);
+            expected.Title.Should().Be(dto.Title);
+            expected.Date.Should().Be(dto.Date);
+            expected.Price.Should().Be(dto.Price);
+            expected.Quantity.Should().Be(dto.Quantity);
+
+            _dataContext.Stuffs.Should()
+                .Contain(_ =>
+                _.Inventory == 30);
+        }
+
+
+
+        private UpdateVoucherDto GenerateUpdateVoucherDto(int stuffId, string title)
+        {
+            return new UpdateVoucherDto
+            {
+                Title =  title,
+                Date = new DateTime(1401, 02, 20),
+                Price = 2000,
+                Quantity = 20,
+                StuffId = stuffId,
+            };
         }
 
         private List<Voucher> CreateVouchersInDataBase(int stuffId)

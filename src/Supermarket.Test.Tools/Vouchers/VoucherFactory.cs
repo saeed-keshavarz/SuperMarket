@@ -13,7 +13,7 @@ namespace Supermarket.Test.Tools.Vouchers
         {
             return new Voucher
             {
-                Title = "سند: " + stuff.Title,
+                Title = "سند " + stuff.Title,
                 Date = new DateTime(1401, 02, 18),
                 Quantity = 10,
                 Price = 1000,
