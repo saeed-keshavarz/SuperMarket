@@ -9,6 +9,7 @@ using SuperMarket.Persistence.EF;
 using SuperMarket.Persistence.EF.Vouchers;
 using SuperMarket.Services.Vouchers;
 using SuperMarket.Services.Vouchers.Contracts;
+using SuperMarket.Services.Vouchers.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,7 +81,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
         }
 
         [Fact]
-        public void Update_update_stuff_properly()
+        public void Update_update_voucher_properly()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
@@ -107,7 +108,23 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
                 _.Inventory == 30);
         }
 
+        [Fact]
+        public void Update_Throw_VoucherNotFoundException_when_voucher_with_id_is_not_exist()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
 
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var dummyVoucherId = 1000;
+            var dummyQuantity = 10;
+            var dto = GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
+
+            Action expected = () => _sut.Update(dummyVoucherId, dto, stuff.Id, dummyQuantity);
+
+            expected.Should().ThrowExactly<VoucherNotFoundException>();
+        }
 
         private UpdateVoucherDto GenerateUpdateVoucherDto(int stuffId, string title)
         {
@@ -120,6 +137,8 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
                 StuffId = stuffId,
             };
         }
+
+     
 
         private List<Voucher> CreateVouchersInDataBase(int stuffId)
         {

@@ -2,6 +2,7 @@
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Vouchers.Contracts;
+using SuperMarket.Services.Vouchers.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,12 @@ namespace SuperMarket.Services.Vouchers
         public void Update(int id, UpdateVoucherDto dto, int stuffId, int quantity)
         {
             var voucher = _repository.FindById(id);
+
+            if (voucher == null)
+            {
+                throw new VoucherNotFoundException();
+            }
+
             voucher.Quantity = dto.Quantity;
             voucher.StuffId = dto.StuffId;
             voucher.Date = dto.Date;

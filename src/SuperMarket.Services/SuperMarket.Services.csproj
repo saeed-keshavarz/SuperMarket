@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Invoices\Exceptions\" />
-    <Folder Include="Vouchers\Exceptions\" />
   </ItemGroup>
 
   <ItemGroup>
