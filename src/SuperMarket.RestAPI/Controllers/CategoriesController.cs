@@ -27,12 +27,6 @@ namespace SuperMarket.RestAPI.Controllers
             return _service.GetAll();
         }
 
-        [HttpGet]
-        public IList<Category> GetAllCategoryWithStuff()
-        {
-            return _service.GetAllCategoryWithStuff();
-        }
-
         [HttpPut("{id}")]
         public void Update(int id, UpdateCategoryDto dto)
         {
