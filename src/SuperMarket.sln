@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMarket.Services", "Sup
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMarket.Specs", "SuperMarket.Specs\SuperMarket.Specs.csproj", "{DE69C915-F831-4793-89FF-802F5DEEE681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperMarket.Services.Test.Unit", "SuperMarket.Services.Test.Unit\SuperMarket.Services.Test.Unit.csproj", "{A3E00831-F2E4-4D81-8D12-BB5FA0B8965D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMarket.Services.Test.Unit", "SuperMarket.Services.Test.Unit\SuperMarket.Services.Test.Unit.csproj", "{A3E00831-F2E4-4D81-8D12-BB5FA0B8965D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Supermarket.Test.Tools", "Supermarket.Test.Tools\Supermarket.Test.Tools.csproj", "{7D2F3D9B-91A4-455E-92D0-E519D133F71B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Supermarket.Test.Tools", "Supermarket.Test.Tools\Supermarket.Test.Tools.csproj", "{7D2F3D9B-91A4-455E-92D0-E519D133F71B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperMarket.RestAPI", "SuperMarket.RestAPI\SuperMarket.RestAPI.csproj", "{502A8451-3749-4C55-906D-920DD911C8A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{7D2F3D9B-91A4-455E-92D0-E519D133F71B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D2F3D9B-91A4-455E-92D0-E519D133F71B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D2F3D9B-91A4-455E-92D0-E519D133F71B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{502A8451-3749-4C55-906D-920DD911C8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{502A8451-3749-4C55-906D-920DD911C8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{502A8451-3749-4C55-906D-920DD911C8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{502A8451-3749-4C55-906D-920DD911C8A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
