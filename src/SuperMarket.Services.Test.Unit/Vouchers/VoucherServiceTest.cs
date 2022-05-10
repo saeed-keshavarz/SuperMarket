@@ -61,7 +61,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = StuffFactory.CreateStuff(category, "پنیر");
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             var vouchers = VoucherFactory.CreateVouchersInDataBase(stuff.Id);
@@ -71,8 +71,8 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
 
             expected.Should().HaveCount(3);
             expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 10 && _.Price == 1000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "سند ماست" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "سند پنیر" && _.Quantity == 30 && _.Price == 3000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 20 && _.Price == 1000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 30 && _.Price == 1000 && _.StuffId == stuff.Id);
         }
 
         [Fact]

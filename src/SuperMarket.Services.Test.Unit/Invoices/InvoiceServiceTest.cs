@@ -67,7 +67,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
 
-            var stuff = StuffFactory.CreateStuff(category, "پنیر");
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             var invoices = InvoiceFactory.CreateInvoicesInDataBase(stuff.Id);
@@ -76,9 +76,9 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var expected = _sut.GetAllInvoices();
 
             expected.Should().HaveCount(3);
-            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 10 && _.Price == 1000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "فاکتور ماست" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "فاکتور پنیر" && _.Quantity == 30 && _.Price == 3000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 10 && _.Price == 2000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 30 && _.Price == 2000 && _.StuffId == stuff.Id);
         }
 
         [Fact]

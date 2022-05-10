@@ -36,7 +36,7 @@ namespace SuperMarket.Persistence.EF.Reports
         {
             return _dataContext.Invoices.Where(_ =>
             _.Date >= start &&
-            _.Date < end
+            _.Date <= end
             ).ToList();
         }
 
@@ -53,7 +53,7 @@ namespace SuperMarket.Persistence.EF.Reports
         {
             return _dataContext.Invoices.Where(_ =>
             _.Date >= start &&
-            _.Date < end &&
+            _.Date <= end &&
             _.StuffId == stuffId
             ).ToList();
         }

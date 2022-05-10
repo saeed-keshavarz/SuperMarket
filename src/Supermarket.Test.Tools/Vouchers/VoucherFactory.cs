@@ -51,8 +51,8 @@ namespace Supermarket.Test.Tools.Vouchers
             return new List<Voucher>
             {
                 new Voucher {Title="سند شیر", Date =new DateTime(1401, 02, 18), Quantity=10,StuffId=stuffId,Price=1000 },
-                new Voucher {Title="سند ماست", Date =new DateTime(1401, 02, 19), Quantity=20,StuffId=stuffId,Price=2000 },
-                new Voucher {Title="سند پنیر", Date =new DateTime(1401, 02, 20), Quantity=30,StuffId=stuffId,Price=3000 },
+                new Voucher {Title="سند شیر", Date =new DateTime(1401, 02, 19), Quantity=20,StuffId=stuffId,Price=1000 },
+                new Voucher {Title="سند شیر", Date =new DateTime(1401, 02, 20), Quantity=30,StuffId=stuffId,Price=1000 },
             };
         }
     }   
