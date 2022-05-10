@@ -7,10 +7,10 @@ namespace SuperMarket.RestAPI.Controllers
 {
     [Route("api/invoices")]
     [ApiController]
-    public class InvoiceController : Controller
+    public class InvoicesController : Controller
     {
         private readonly InvoiceService _service;
-        public InvoiceController(InvoiceService service)
+        public InvoicesController(InvoiceService service)
         { 
             _service = service;
         }
