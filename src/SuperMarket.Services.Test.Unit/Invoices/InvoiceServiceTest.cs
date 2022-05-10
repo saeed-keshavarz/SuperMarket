@@ -62,6 +62,24 @@ namespace SuperMarket.Services.Test.Unit.Invoices
         }
 
         [Fact]
+        public void GetAll_return_invoice_by_id()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var invoice = InvoiceFactory.CreateInvoice(stuff);
+            _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
+
+            var expected = _sut.GetById(invoice.Id);
+
+            expected.Title.Should().Be("فاکتور شیر");
+            expected.Price.Should().Be(1000);
+        }
+
+            [Fact]
         public void GetAll_returns_all_invoices()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");

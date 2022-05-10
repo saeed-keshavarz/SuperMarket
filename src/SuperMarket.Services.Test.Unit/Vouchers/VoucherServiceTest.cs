@@ -56,6 +56,24 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
         }
 
         [Fact]
+        public void GetAll_return_vouchers_by_id()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var voucher = VoucherFactory.CreateVoucher(stuff);
+            _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
+
+            var expected = _sut.GetById(voucher.Id);
+
+            expected.Title.Should().Be("سند شیر");
+            expected.Price.Should().Be(1000);
+        }
+
+            [Fact]
         public void GetAll_returns_all_vouchers()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");

@@ -3,7 +3,6 @@ using Supermarket.Test.Tools.Categories;
 using Supermarket.Test.Tools.Invoices;
 using Supermarket.Test.Tools.Stuffs;
 using Supermarket.Test.Tools.Vouchers;
-using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
@@ -12,10 +11,7 @@ using SuperMarket.Services.Stuffs;
 using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Stuffs.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SuperMarket.Services.Test.Unit.Stuffs
@@ -73,7 +69,25 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
         }
 
         [Fact]
-        public void GetAll_returns_all_categories()
+        public void GetAll_returns_stuff_by_id()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var expected = _sut.GetById(stuff.Id);
+
+            expected.Title.Should().Be("شیر");
+            expected.Inventory.Should().Be(20);
+            expected.MinimumInventory.Should().Be(20);
+            expected.MaximumInventory.Should().Be(50);
+            expected.Unit.Should().Be("پاکت");
+        }
+
+        [Fact]
+        public void GetAll_returns_all_stuffs()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));

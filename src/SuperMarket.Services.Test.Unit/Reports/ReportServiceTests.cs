@@ -83,5 +83,30 @@ namespace SuperMarket.Services.Test.Unit.Reports
             expected.Income.Should().Be(120000);
             expected.Profit.Should().Be(60000);
         }
+
+        [Fact]
+        public void Get_total_profit()
+        {
+            DateTime start = new DateTime(1401, 02, 18);
+            DateTime end = new DateTime(1401, 02, 20);
+
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            var vouchers = VoucherFactory.CreateVouchersInDataBase(stuff.Id);
+            _dataContext.Manipulate(_ => _.Vouchers.AddRange(vouchers));
+
+            var invoices = InvoiceFactory.CreateInvoicesInDataBase(stuff.Id);
+            _dataContext.Manipulate(_ => _.Invoices.AddRange(invoices));
+
+            var expected = _sut.GetTotalProfit(start, end);
+
+            expected.Cost.Should().Be(60000);
+            expected.Income.Should().Be(120000);
+            expected.Profit.Should().Be(60000);
+        }
     }
 }

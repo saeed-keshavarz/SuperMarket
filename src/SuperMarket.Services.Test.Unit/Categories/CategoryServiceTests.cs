@@ -58,6 +58,17 @@ namespace SuperMarket.Services.Test.Unit.Categories
         }
 
         [Fact]
+        public void GetAll_return_category_by_id()
+        {
+            var category = CategoryFactory.CreateCategory("Dummy");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var expected = _sut.GetById(category.Id);
+
+            expected.Title.Should().Be("Dummy");
+        }
+
+            [Fact]
         public void GetAll_returns_all_categories()
         {
             var categories = CategoryFactory.CreateCategoriesInDataBase();
