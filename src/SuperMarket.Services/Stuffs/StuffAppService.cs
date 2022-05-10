@@ -45,6 +45,36 @@ namespace SuperMarket.Services.Stuffs
             _unitOfWork.Commit();
         }
 
+        public Stuff GetById(int id)
+        {
+            return _repository.FindById(id);
+        }
+
+        public IList<Stuff> GetAllStuff()
+        {
+            return _repository.GetAllStuff();
+        }
+
+        public void Update(int id, UpdateStuffDto dto)
+        {
+            var isTitleDuplicate = _repository.IsExistStuffTitle(dto.Title);
+
+            if (isTitleDuplicate)
+            {
+                throw new DuplicateStuffTitleInCategoryException();
+            }
+
+            var stuff = _repository.FindById(id);
+
+            if (stuff == null)
+            {
+                throw new StuffNotFoundException();
+            }
+
+            stuff.Title = dto.Title;
+            _unitOfWork.Commit();
+        }
+
         public void Delete(int id)
         {
             var stuff = _repository.FindById(id);
@@ -67,31 +97,5 @@ namespace SuperMarket.Services.Stuffs
             _repository.Delete(stuff);
             _unitOfWork.Commit();
         }
-
-        public IList<Stuff> GetAllStuff()
-        {
-            return _repository.GetAllStuff();
-        }
-
-        public void Update(int id, UpdateStuffDto dto)
-        {
-            var isTitleDuplicate = _repository.IsExistStuffTitle(dto.Title);
-
-            if (isTitleDuplicate)
-            {
-                throw new DuplicateStuffTitleInCategoryException();
-            }
-
-            var stuff = _repository.FindById(id);
-            
-            if (stuff == null)
-            {
-                throw new StuffNotFoundException();
-            }
-
-            stuff.Title = dto.Title;
-            _unitOfWork.Commit();
-        }
-
     }
 }

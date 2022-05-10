@@ -1,40 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperMarket.Entities;
-using SuperMarket.Services.Categories.Contracts;
+using SuperMarket.Services.Stuffs.Contracts;
 using System.Collections.Generic;
 
 namespace SuperMarket.RestAPI.Controllers
 {
-    [Route("api/catgeories")]
+    [Route("api/stuffs")]
     [ApiController]
-    public class CategoriesController : Controller
+    public class StuffsController : Controller
     {
-        private readonly CategoryService _service;
-        public CategoriesController(CategoryService service)
+        private readonly StuffService _service;
+
+        public StuffsController(StuffService service)
         {
             _service = service;
         }
 
         [HttpPost]
-        public void Add(AddCategoryDto dto)
+        public void Add(AddStuffDto dto)
         {
             _service.Add(dto);
         }
 
         [HttpGet]
-        public IList<Category> GetAll()
+        public IList<Stuff> GetAll()
         {
-            return _service.GetAll();
+            return _service.GetAllStuff();
         }
 
         [HttpGet("{id}")]
-        public Category GetCategory(int id)
+        public Stuff GetStuffById(int id)
         {
             return _service.GetById(id);
         }
 
         [HttpPut("{id}")]
-        public void Update(int id, UpdateCategoryDto dto)
+        public void Update(int id, UpdateStuffDto dto)
         {
             _service.Update(id, dto);
         }
