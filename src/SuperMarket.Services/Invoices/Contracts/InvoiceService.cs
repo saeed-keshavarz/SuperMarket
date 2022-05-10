@@ -10,9 +10,10 @@ namespace SuperMarket.Services.Invoices.Contracts
 {
     public interface InvoiceService : Service
     {
-        void Add(AddInvoiceDto dto, int stuffId);
-        void Update(int id, UpdateInvoiceDto dto, int stuffId, int quantity);
-        void Delete(int id, int stuffId, int quantity);
+        void Add(AddInvoiceDto dto);
+        Invoice GetById(int id);
         IList<Invoice> GetAllInvoices();
+        void Update(int id, UpdateInvoiceDto dto);
+        void Delete(int id);
     }
 }

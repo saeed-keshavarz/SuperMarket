@@ -46,7 +46,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
 
             AddInvoiceDto dto = InvoiceFactory.GenerateAddInvoiceDto(stuff, "فاکتور پنیر");
 
-            _sut.Add(dto, stuff.Id);
+            _sut.Add(dto);
 
             _dataContext.Invoices.Should()
                 .Contain(_ =>
@@ -95,7 +95,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
 
             var dto = InvoiceFactory.GenerateUpdateInvoiceDto(stuff.Id, "فاکتور شیر");
 
-            _sut.Update(invoice.Id, dto, stuff.Id, invoice.Quantity);
+            _sut.Update(invoice.Id, dto);
 
             var expected = _dataContext.Invoices
                 .FirstOrDefault(_ => _.Id == invoice.Id);
@@ -119,7 +119,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var dummyQuantity = 10;
             var dto = InvoiceFactory.GenerateUpdateInvoiceDto(stuff.Id, "سند شیر");
 
-            Action expected = () => _sut.Update(dummyInvoiceId, dto, stuff.Id, dummyQuantity);
+            Action expected = () => _sut.Update(dummyInvoiceId, dto);
 
             expected.Should().ThrowExactly<InvoiceNotFoundException>();
         }
@@ -136,7 +136,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var invoice = InvoiceFactory.CreateInvoice(stuff);
             _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
 
-            _sut.Delete(invoice.Id, stuff.Id, invoice.Quantity);
+            _sut.Delete(invoice.Id);
 
             var expected = _dataContext.Stuffs
                 .FirstOrDefault(_ => _.Id == stuff.Id);
@@ -154,7 +154,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var quantity = 10;
             var dummyInvoiceId = 1000;
 
-            Action expected = () => _sut.Delete(dummyInvoiceId, stuffId, quantity);
+            Action expected = () => _sut.Delete(dummyInvoiceId);
 
             expected.Should().ThrowExactly<InvoiceNotFoundException>();
         } 

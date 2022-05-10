@@ -23,7 +23,7 @@ namespace SuperMarket.Services.Invoices
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(AddInvoiceDto dto, int stuffId)
+        public void Add(AddInvoiceDto dto)
         {
             var invoice = new Invoice
             {
@@ -32,32 +32,16 @@ namespace SuperMarket.Services.Invoices
                 Buyer = dto.Buyer,
                 Quantity = dto.Quantity,
                 Price = dto.Price,
-                StuffId = stuffId,
+                StuffId = dto.StuffId,
             };
 
             _repository.Add(invoice);
 
-            var stuff = _repository.GetStuffById(stuffId);
+            var stuff = _repository.GetStuffById(dto.StuffId);
             stuff.Inventory -= dto.Quantity;
 
             _unitOfWork.Commit();
 
-        }
-
-        public void Delete(int id, int stuffId, int quantity)
-        {
-            var invoice = _repository.FindById(id);
-
-            if(invoice == null)
-            {
-                throw new InvoiceNotFoundException();
-            }
-
-            var stuff = _repository.GetStuffById(stuffId);
-            stuff.Inventory += quantity;
-
-            _repository.Delete(invoice);
-            _unitOfWork.Commit();
         }
 
         public IList<Invoice> GetAllInvoices()
@@ -65,7 +49,12 @@ namespace SuperMarket.Services.Invoices
             return _repository.GetAllInvoices();
         }
 
-        public void Update(int id, UpdateInvoiceDto dto, int stuffId, int quantity)
+        public Invoice GetById(int id)
+        {
+            return _repository.FindById(id);
+        }
+
+        public void Update(int id, UpdateInvoiceDto dto)
         {
             var invoice = _repository.FindById(id);
 
@@ -74,6 +63,22 @@ namespace SuperMarket.Services.Invoices
                 throw new InvoiceNotFoundException();
             }
 
+            if (invoice.StuffId != dto.StuffId)
+            {
+                var previousStuff = _repository.GetStuffById(invoice.StuffId);
+                previousStuff.Inventory += invoice.Quantity;
+
+                var newStuff = _repository.GetStuffById(dto.StuffId);
+                newStuff.Inventory -= dto.Quantity;
+            }
+            else
+            {
+                var stuff = _repository.GetStuffById(dto.StuffId);
+                stuff.Inventory += invoice.Quantity;
+                stuff.Inventory -= dto.Quantity;
+            }
+
+
             invoice.Title = dto.Title;
             invoice.Quantity = dto.Quantity;
             invoice.StuffId = dto.StuffId;
@@ -81,21 +86,22 @@ namespace SuperMarket.Services.Invoices
             invoice.Date = dto.Date;
             invoice.Price = dto.Price;
 
-            if (stuffId != dto.StuffId)
-            {
-                var previousStuff = _repository.GetStuffById(stuffId);
-                previousStuff.Inventory += quantity;
+            _unitOfWork.Commit();
+        }
 
-                var newStuff = _repository.GetStuffById(dto.StuffId);
-                newStuff.Inventory -= dto.Quantity;
-            }
-            else
+        public void Delete(int id)
+        {
+            var invoice = _repository.FindById(id);
+
+            if (invoice == null)
             {
-                var stuff = _repository.GetStuffById(stuffId);
-                stuff.Inventory += quantity;
-                stuff.Inventory -= dto.Quantity;
+                throw new InvoiceNotFoundException();
             }
 
+            var stuff = _repository.GetStuffById(invoice.StuffId);
+            stuff.Inventory += invoice.Quantity;
+
+            _repository.Delete(invoice);
             _unitOfWork.Commit();
         }
     }

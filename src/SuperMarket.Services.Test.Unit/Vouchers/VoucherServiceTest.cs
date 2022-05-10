@@ -41,7 +41,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
 
             AddVoucherDto dto = VoucherFactory.GenerateAddVoucherDto(stuff, "سند پنیر");
 
-            _sut.Add(dto, stuff.Id);
+            _sut.Add(dto);
 
             _dataContext.Vouchers.Should()
                 .Contain(_ =>
@@ -89,7 +89,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
 
             var dto = VoucherFactory.GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
 
-            _sut.Update(voucher.Id, dto, stuff.Id, voucher.Quantity);
+            _sut.Update(voucher.Id, dto);
 
             var expected = _dataContext.Vouchers
                 .FirstOrDefault(_ => _.Id == voucher.Id);
@@ -113,7 +113,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var dummyQuantity = 10;
             var dto = VoucherFactory.GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
 
-            Action expected = () => _sut.Update(dummyVoucherId, dto, stuff.Id, dummyQuantity);
+            Action expected = () => _sut.Update(dummyVoucherId, dto);
 
             expected.Should().ThrowExactly<VoucherNotFoundException>();
         }
@@ -130,7 +130,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var voucher = VoucherFactory.CreateVoucher(stuff);
             _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));
 
-            _sut.Delete(voucher.Id, stuff.Id, voucher.Quantity);
+            _sut.Delete(voucher.Id);
 
             var expected = _dataContext.Stuffs
                 .FirstOrDefault(_ => _.Id == stuff.Id);
@@ -148,7 +148,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var quantity = 10;
             var dummyVoucherId = 1000;
 
-            Action expected = () => _sut.Delete(dummyVoucherId, stuffId, quantity);
+            Action expected = () => _sut.Delete(dummyVoucherId);
 
             expected.Should().ThrowExactly<VoucherNotFoundException>();
         }

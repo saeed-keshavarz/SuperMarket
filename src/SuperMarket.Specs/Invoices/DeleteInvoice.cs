@@ -83,7 +83,7 @@ namespace SuperMarket.Specs.Invoices
         {
             var invoice = _dataContext.Invoices.FirstOrDefault(_ => _.Title == _invoice.Title);
 
-            _sut.Delete(invoice.Id, _stuff.Id, invoice.Quantity);
+            _sut.Delete(invoice.Id);
         }
 
         [Then("")]

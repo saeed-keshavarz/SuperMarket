@@ -95,7 +95,7 @@ namespace SuperMarket.Specs.Invoices
                 StuffId = _stuff.Id,
             };
 
-            _sut.Update(invoice.Id, _dto, _stuff.Id, invoice.Quantity);
+            _sut.Update(invoice.Id, _dto);
 
         }
 
