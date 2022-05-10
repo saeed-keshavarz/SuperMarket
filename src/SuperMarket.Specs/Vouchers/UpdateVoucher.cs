@@ -94,7 +94,7 @@ namespace SuperMarket.Specs.Vouchers
                 StuffId = _stuff.Id,
             };
 
-            _sut.Update(voucher.Id, _dto, _stuff.Id, voucher.Quantity);
+            _sut.Update(voucher.Id, _dto);
 
         }
 

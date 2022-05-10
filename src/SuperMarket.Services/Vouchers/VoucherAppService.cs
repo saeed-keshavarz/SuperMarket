@@ -24,7 +24,7 @@ namespace SuperMarket.Services.Vouchers
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(AddVoucherDto dto, int stuffId)
+        public void Add(AddVoucherDto dto)
         {
             var voucher = new Voucher
             {
@@ -37,26 +37,15 @@ namespace SuperMarket.Services.Vouchers
 
             _repository.Add(voucher);
 
-            var stuff = _repository.GetStuffById(stuffId);
+            var stuff = _repository.GetStuffById(dto.StuffId);
             stuff.Inventory += dto.Quantity;
 
             _unitOfWork.Commit();
         }
 
-        public void Delete(int id, int stuffId, int quantity)
+        public Voucher GetById(int id)
         {
-            var voucher = _repository.FindById(id);
-
-            if (voucher == null)
-            {
-                throw new VoucherNotFoundException();
-            }
-
-            var stuff = _repository.GetStuffById(stuffId);
-            stuff.Inventory -= quantity;
-
-            _repository.Delete(voucher);
-            _unitOfWork.Commit();
+            return _repository.FindById(id);
         }
 
         public IList<Voucher> GetAllVouchers()
@@ -64,7 +53,7 @@ namespace SuperMarket.Services.Vouchers
             return _repository.GetAllVouchers();
         }
 
-        public void Update(int id, UpdateVoucherDto dto, int stuffId, int quantity)
+        public void Update(int id, UpdateVoucherDto dto)
         {
             var voucher = _repository.FindById(id);
 
@@ -72,27 +61,44 @@ namespace SuperMarket.Services.Vouchers
             {
                 throw new VoucherNotFoundException();
             }
-            voucher.Title = dto.Title;
-            voucher.Quantity = dto.Quantity;
-            voucher.StuffId = dto.StuffId;
-            voucher.Date = dto.Date;
-            voucher.Price = dto.Price;
 
-            if (stuffId != dto.StuffId)
+            if (voucher.StuffId != dto.StuffId)
             {
-                var previousStuff = _repository.GetStuffById(stuffId);
-                previousStuff.Inventory -= quantity;
+                var previousStuff = _repository.GetStuffById(voucher.StuffId);
+                previousStuff.Inventory -= voucher.Quantity;
 
                 var newStuff = _repository.GetStuffById(dto.StuffId);
                 newStuff.Inventory += dto.Quantity;
             }
             else
             {
-                var stuff = _repository.GetStuffById(stuffId);
-                stuff.Inventory -= quantity;
+                var stuff = _repository.GetStuffById(dto.StuffId);
+                stuff.Inventory -= voucher.Quantity;
                 stuff.Inventory += dto.Quantity;
             }
 
+            voucher.Title = dto.Title;
+            voucher.Quantity = dto.Quantity;
+            voucher.StuffId = dto.StuffId;
+            voucher.Date = dto.Date;
+            voucher.Price = dto.Price;
+
+            _unitOfWork.Commit();
+        }
+
+        public void Delete(int id)
+        {
+            var voucher = _repository.FindById(id);
+
+            if (voucher == null)
+            {
+                throw new VoucherNotFoundException();
+            }
+
+            var stuff = _repository.GetStuffById(voucher.StuffId);
+            stuff.Inventory -= voucher.Quantity;
+
+            _repository.Delete(voucher);
             _unitOfWork.Commit();
         }
     }

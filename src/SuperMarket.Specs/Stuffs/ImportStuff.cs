@@ -86,7 +86,7 @@ InOrderTo = "و آن را به فروش برسانم "
                 StuffId = _stuff.Id,
             };
 
-             _sut.Add(_dto, _stuff.Id);
+             _sut.Add(_dto);
         }
         [Then("سند ورود کالایی با کد ‘100’ با تعداد ‘10’ در تاریخ ‘21/02/1400’ در فهرست سند ورودی کالا باید وجود داشته باشد")]
         public void Then()
@@ -106,6 +106,16 @@ InOrderTo = "و آن را به فروش برسانم "
             expected.Title.Should().Be(_stuff.Title);
             expected.Inventory.Should().Be(20);
         }
-      
+
+        [Fact]
+        public void Run()
+        {
+            Runner.RunScenario(_ => Given()
+            , _ => GivenAnd()
+            , _ => When()
+            , _ => Then()
+            , _ => ThenAnd());
+        }
+
     }
 }

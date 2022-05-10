@@ -83,7 +83,7 @@ namespace SuperMarket.Specs.Vouchers
         {
             var voucher = _dataContext.Vouchers.FirstOrDefault(_ => _.Title == _voucher.Title);
 
-            _sut.Delete(voucher.Id, _stuff.Id, voucher.Quantity);
+            _sut.Delete(voucher.Id);
         }
 
         [Then("سند ورود کالا  با عنوان ‘سند شیر’ و تاریخ ‘21/02/1400’ و تعداد ‘10’ و قیمت ‘10000’ مربوط به کالای با عنوان ‘شیر’ در فهرست سند ورود  نباید  وجود داشته باشد")]
