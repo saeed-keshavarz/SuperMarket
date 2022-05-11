@@ -38,6 +38,12 @@ namespace SuperMarket.Services.Vouchers
             _repository.Add(voucher);
 
             var stuff = _repository.GetStuffById(dto.StuffId);
+
+            if (stuff.MaximumInventory < stuff.Inventory + dto.Quantity)
+            {
+                throw new InventoryMoreThanMaximumInventoryInStuffException();
+            }
+
             stuff.Inventory += dto.Quantity;
 
             _unitOfWork.Commit();
