@@ -18,7 +18,7 @@ namespace SuperMarket.Migrations
             Delete.Table("Invoices");
             Delete.Table("Vouchers");
             Delete.Table("Stuffs");
-            Delete.Table("Categories");    
+            Delete.Table("Categories");
         }
 
         private void CreateVouchers()

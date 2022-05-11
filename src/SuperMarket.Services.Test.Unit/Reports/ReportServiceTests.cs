@@ -9,10 +9,6 @@ using SuperMarket.Persistence.EF.Reports;
 using SuperMarket.Services.Reports;
 using SuperMarket.Services.Reports.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SuperMarket.Services.Test.Unit.Reports

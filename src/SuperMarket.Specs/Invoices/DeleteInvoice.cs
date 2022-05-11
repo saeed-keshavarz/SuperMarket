@@ -1,4 +1,7 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
+using Supermarket.Test.Tools.Invoices;
+using Supermarket.Test.Tools.Stuffs;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -7,7 +10,6 @@ using SuperMarket.Persistence.EF.Invoices;
 using SuperMarket.Services.Invoices;
 using SuperMarket.Services.Invoices.Contracts;
 using SuperMarket.Specs.Infrastructure;
-using System;
 using System.Linq;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
@@ -39,42 +41,20 @@ namespace SuperMarket.Specs.Invoices
             _sut = new InvoiceAppService(_repository, _unitOfWork);
         }
 
-        [Given("کالایی با عنوان با عنوان ‘شیر’  و کد کالا ‘100’ موجودی ‘10’ در دسته بندی با عنوان ‘لبنیات’ وجود دارد")]
+        [Given("کالایی با عنوان با عنوان ‘شیر’  و کد کالا ‘100’ موجودی ‘20’ در دسته بندی با عنوان ‘لبنیات’ وجود دارد")]
         public void Given()
         {
-            _category = new Category()
-            {
-                Title = "لبنیات",
-            };
-
+            _category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
 
-            _stuff = new Stuff()
-            {
-                Title = "شیر",
-                Inventory = 10,
-                Unit = "پاکت",
-                MinimumInventory = 5,
-                MaximumInventory = 20,
-                CategoryId = _category.Id,
-            };
-
+            _stuff = StuffFactory.CreateStuff(_category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
         }
 
         [And("فاکتور فروشی  با عنوان ‘فاکتور شیر ’ و تاریخ ‘21/02/1400’ و تعداد ‘10’ و قیمت ‘10000’ مربوط به کالای با عنوان ‘شیر’ وجود دارد")]
         public void GivenAnd()
         {
-            _invoice = new Invoice()
-            {
-                Title = "فاکتور شیر",
-                Date = new DateTime(1400, 02, 21),
-                Buyer = "آقای کشاورز",
-                Quantity = 10,
-                Price = 10000,
-                StuffId = _stuff.Id,
-            };
-
+            _invoice = InvoiceFactory.CreateInvoice(_stuff);
             _dataContext.Manipulate(_ => _.Invoices.Add(_invoice));
         }
 
@@ -86,7 +66,7 @@ namespace SuperMarket.Specs.Invoices
             _sut.Delete(invoice.Id);
         }
 
-        [Then("")]
+        [Then("فاکتور فروشی  با عنوان ‘فاکتور شیر’ و تاریخ ‘21/02/1400’ و تعداد ‘10’ و قیمت ‘10000’ مربوط به کالای با عنوان ‘شیر’ در فهرست فاکتور فروش نباید  وجود داشته باشد")]
         public void Then()
         {
             _dataContext.Invoices.Should().
@@ -98,7 +78,7 @@ namespace SuperMarket.Specs.Invoices
         {
             var expected = _dataContext.Stuffs.FirstOrDefault();
             expected.Title.Should().Be(_stuff.Title);
-            expected.Inventory.Should().Be(20);
+            expected.Inventory.Should().Be(30);
         }
 
         [Fact]

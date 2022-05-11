@@ -11,7 +11,7 @@ namespace SuperMarket.RestAPI.Controllers
     {
         private readonly InvoiceService _service;
         public InvoicesController(InvoiceService service)
-        { 
+        {
             _service = service;
         }
 

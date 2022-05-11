@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
+using Supermarket.Test.Tools.Stuffs;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -9,10 +11,7 @@ using SuperMarket.Services.Categories.Contracts;
 using SuperMarket.Services.Categories.Exceptions;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -46,27 +45,14 @@ InOrderTo = "در آن کالای خود را تعریف کنم "
         [Given("دسته بندی با عنوان ‘لبنیات’ در فهرست دسته بندی کالا وجود دارد")]
         public void Given()
         {
-            _category = new Category()
-            {
-                Title = "لبنیات",
-            };
-
+            _category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 
         [And("کالایی با عنوان ‘پنیر’ در دسته بندی با عنوان ‘لبنیات’ وجود دارد")]
         public void GivenAnd()
         {
-            _stuff = new Stuff()
-            {
-                Title = "پنیر",
-                CategoryId = _category.Id,
-                Inventory = 10,
-                MaximumInventory = 20,
-                MinimumInventory = 5,
-                Unit = "pack"
-            };
-
+            _stuff = StuffFactory.CreateStuff(_category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(_stuff));
         }
 
@@ -82,7 +68,7 @@ InOrderTo = "در آن کالای خود را تعریف کنم "
         public void Then()
         {
             var expected = _dataContext.Categories.FirstOrDefault();
-            
+
             expected.Title.Should().Be(_category.Title);
         }
 

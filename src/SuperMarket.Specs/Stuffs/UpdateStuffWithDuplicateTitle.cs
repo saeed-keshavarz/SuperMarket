@@ -9,10 +9,7 @@ using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Stuffs.Exceptions;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -114,7 +111,6 @@ namespace SuperMarket.Specs.Stuffs
             , _ => Then()
             , _ => ThenAnd());
         }
-
 
         private static UpdateStuffDto GenerateUpdateStuffDto(string title)
         {

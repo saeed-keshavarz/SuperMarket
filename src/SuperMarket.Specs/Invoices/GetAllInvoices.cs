@@ -1,4 +1,7 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
+using Supermarket.Test.Tools.Invoices;
+using Supermarket.Test.Tools.Stuffs;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -7,11 +10,7 @@ using SuperMarket.Persistence.EF.Invoices;
 using SuperMarket.Services.Invoices;
 using SuperMarket.Services.Invoices.Contracts;
 using SuperMarket.Specs.Infrastructure;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -42,62 +41,23 @@ namespace SuperMarket.Specs.Invoices
         [Given("فاکتور فروش با عنوان ‘فاکتور شیر ‘ و تاریخ ‘21/02/1400’ و تعداد ‘10’ و قیمت ‘10000’ مربوط به کالای با عنوان ‘شیر’ وجود دارد")]
         public void Given()
         {
-            _category = new Category()
-            {
-                Title = "لبنیات",
-            };
-
+            _category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
 
-            var stuff = new Stuff()
-            {
-                Title = "شیر",
-                Inventory = 10,
-                Unit = "پاکت",
-                MinimumInventory = 5,
-                MaximumInventory = 20,
-                CategoryId = _category.Id,
-            };
-
+            var stuff = StuffFactory.CreateStuff(_category, "شیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var invoice = new Invoice()
-            {
-                Title = "فاکتور شیر",
-                Date = new DateTime(1400, 02, 21),
-                Quantity = 10,
-                Price = 10000,
-                Buyer = "کشاورز",
-                StuffId = stuff.Id,
-            };
-
+            var invoice = InvoiceFactory.CreateInvoice(stuff);
             _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
         }
 
         [And("فاکتور فروشی  با عنوان ‘فاکتور پنیر ‘ و تاریخ ‘21/02/1400’ و تعداد ‘20’ و قیمت ‘20000’ مربوط به کالای با عنوان ‘پنیر’ وجود دارد")]
         public void And()
         {
-            var stuff = new Stuff()
-            {
-                Title = "پنیر",
-                Inventory = 10,
-                Unit = "پاکت",
-                MinimumInventory = 5,
-                MaximumInventory = 20,
-                CategoryId = _category.Id,
-            };
+            var stuff = StuffFactory.CreateStuff(_category, "پنیر");
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
-            var invoice = new Invoice()
-            {
-                Title = "فاکتور پنیر",
-                Date = new DateTime(1400, 02, 21),
-                Quantity = 20,
-                Price = 20000,
-                Buyer= "کشاورز",
-                StuffId = stuff.Id,
-            };
-
+            var invoice = InvoiceFactory.CreateInvoice(stuff);
             _dataContext.Manipulate(_ => _.Invoices.Add(invoice));
         }
 

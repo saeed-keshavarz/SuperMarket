@@ -1,10 +1,7 @@
 ﻿using SuperMarket.Entities;
 using SuperMarket.Services.Categories.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperMarket.Persistence.EF.Categories
 {
@@ -19,11 +16,6 @@ namespace SuperMarket.Persistence.EF.Categories
         public void Add(Category category)
         {
             _dataContext.Categories.Add(category);
-        }
-
-        public void Delete(Category category)
-        {
-            _dataContext.Categories.Remove(category);
         }
 
         public Category FindById(int id)
@@ -48,6 +40,11 @@ namespace SuperMarket.Persistence.EF.Categories
                     }).ToHashSet(),
 
                 }).ToList();
+        }
+
+        public void Delete(Category category)
+        {
+            _dataContext.Categories.Remove(category);
         }
 
         public bool IsExistCategoryTitle(string title)

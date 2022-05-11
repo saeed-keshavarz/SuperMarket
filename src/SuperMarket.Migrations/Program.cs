@@ -1,7 +1,6 @@
 ﻿using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Data.SqlClient;
 using System.IO;
 

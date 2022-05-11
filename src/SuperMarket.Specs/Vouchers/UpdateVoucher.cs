@@ -8,10 +8,7 @@ using SuperMarket.Services.Vouchers;
 using SuperMarket.Services.Vouchers.Contracts;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -95,7 +92,6 @@ namespace SuperMarket.Specs.Vouchers
             };
 
             _sut.Update(voucher.Id, _dto);
-
         }
 
         [Then("سند ورودی با عنوان ‘سند ورود شیر 21/02/1400’ و کد کالا ‘100’ و تاریخ ‘20/02/1400’ و تعداد ‘15’ و قیمت ‘20000’ باید در فهرست سند ورود  وجود داشته باشد")]
@@ -123,7 +119,7 @@ namespace SuperMarket.Specs.Vouchers
             , _ => GivenAnd()
             , _ => When()
             , _ => Then()
-   , _ => ThenAnd());
+            , _ => ThenAnd());
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -7,11 +8,7 @@ using SuperMarket.Persistence.EF.Categories;
 using SuperMarket.Services.Categories;
 using SuperMarket.Services.Categories.Contracts;
 using SuperMarket.Specs.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -42,11 +39,7 @@ InOrderTo = "در آن کالای خود را تعریف کنم "
         [Given("دسته بندی با عنوان ‘لبنیات’ در فهرست دسته بندی کالا وجود دارد")]
         public void Given()
         {
-            _category = new Category()
-            {
-                Title = "لبنیات",
-            };
-
+            _category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 

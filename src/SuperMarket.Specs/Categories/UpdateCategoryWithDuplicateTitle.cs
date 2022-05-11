@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -9,16 +10,12 @@ using SuperMarket.Services.Categories.Contracts;
 using SuperMarket.Services.Categories.Exceptions;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
 namespace SuperMarket.Specs.Categories
 {
-
     [Scenario("ویرایش دسته بندی کالا با عنوان تکراری")]
     [Feature("",
    AsA = "فروشنده ",
@@ -46,22 +43,14 @@ namespace SuperMarket.Specs.Categories
         [Given("دسته بندی با عنوان ‘لبنیات’ در فهرست دسته بندی کالا وجود دارد")]
         public void Given()
         {
-            _category = new Category()
-            {
-                Title = "لبنیات",
-            };
-
+            _category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 
         [And("دسته بندی با عنوان ‘خشکبار’ در فهرست دسته بندی کالا وجود دارد")]
         public void GivenAnd()
         {
-            _category = new Category()
-            {
-                Title = "خشکبار",
-            };
-
+            _category = CategoryFactory.CreateCategory("خشکبار");
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 
@@ -69,7 +58,7 @@ namespace SuperMarket.Specs.Categories
         public void When()
         {
             var category = _dataContext.Categories.FirstOrDefault(_ => _.Title == _category.Title);
-            _dto = GenerateUpdateCategoryDto("لبنیات");
+            _dto = CategoryFactory.GenerateUpdateCategoryDto("لبنیات");
 
             expected = () => _sut.Update(category.Id, _dto);
         }
@@ -87,7 +76,6 @@ namespace SuperMarket.Specs.Categories
             expected.Should().ThrowExactly<DuplicateCategoryTitleException>();
         }
 
-
         [Fact]
         public void Run()
         {
@@ -96,14 +84,6 @@ namespace SuperMarket.Specs.Categories
             , _ => When()
             , _ => Then()
             , _ => ThenAnd());
-        }
-
-        private static UpdateCategoryDto GenerateUpdateCategoryDto(string title)
-        {
-            return new UpdateCategoryDto
-            {
-                Title = title,
-            };
         }
     }
 }

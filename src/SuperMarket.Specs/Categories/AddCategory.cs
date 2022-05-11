@@ -5,11 +5,7 @@ using SuperMarket.Persistence.EF.Categories;
 using SuperMarket.Services.Categories;
 using SuperMarket.Services.Categories.Contracts;
 using SuperMarket.Specs.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -28,6 +24,7 @@ namespace SuperMarket.Specs.Categories
         private readonly CategoryRepository _repository;
         private readonly UnitOfWork _unitOfWork;
         private AddCategoryDto _dto;
+
         public AddCategory(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
@@ -35,6 +32,7 @@ namespace SuperMarket.Specs.Categories
             _repository = new EFCategoryRepository(_dataContext);
             _sut = new CategoryAppService(_repository, _unitOfWork);
         }
+
         [Given("هیچ دسته بندی در فهرست دسته بندی کالا وجود ندارد")]
         public void Given()
         {

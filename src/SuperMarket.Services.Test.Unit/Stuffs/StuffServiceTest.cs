@@ -98,9 +98,21 @@ namespace SuperMarket.Services.Test.Unit.Stuffs
             var expected = _sut.GetAllStuff();
 
             expected.Should().HaveCount(3);
-            expected.Should().Contain(_ => _.Title == "شیر" && _.Inventory == 10 && _.MinimumInventory == 5 && _.MaximumInventory == 50);
-            expected.Should().Contain(_ => _.Title == "پنیر" && _.Inventory == 20 && _.MinimumInventory == 5 && _.MaximumInventory == 50);
-            expected.Should().Contain(_ => _.Title == "ماست" && _.Inventory == 30 && _.MinimumInventory == 5 && _.MaximumInventory == 50);
+            expected.Should().Contain(_ =>
+            _.Title == "شیر" &&
+            _.Inventory == 10 &&
+            _.MinimumInventory == 5 &&
+            _.MaximumInventory == 50);
+            expected.Should().Contain(_ =>
+            _.Title == "پنیر" &&
+            _.Inventory == 20 &&
+            _.MinimumInventory == 5 &&
+            _.MaximumInventory == 50);
+            expected.Should().Contain(_ =>
+            _.Title == "ماست" &&
+            _.Inventory == 30 &&
+            _.MinimumInventory == 5 &&
+            _.MaximumInventory == 50);
         }
 
         [Fact]

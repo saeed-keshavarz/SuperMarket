@@ -3,18 +3,12 @@ using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
-using SuperMarket.Persistence.EF.Stuffs;
 using SuperMarket.Persistence.EF.Vouchers;
-using SuperMarket.Services.Stuffs;
-using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Vouchers;
 using SuperMarket.Services.Vouchers.Contracts;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -86,7 +80,7 @@ InOrderTo = "و آن را به فروش برسانم "
                 StuffId = _stuff.Id,
             };
 
-             _sut.Add(_dto);
+            _sut.Add(_dto);
         }
         [Then("سند ورود کالایی با کد ‘100’ با تعداد ‘10’ در تاریخ ‘21/02/1400’ در فهرست سند ورودی کالا باید وجود داشته باشد")]
         public void Then()

@@ -2,11 +2,8 @@
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Services.Categories.Contracts;
 using SuperMarket.Services.Categories.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperMarket.Services.Categories
 {
@@ -27,7 +24,7 @@ namespace SuperMarket.Services.Categories
         {
             var isTitleDuplicate = _repository.IsExistCategoryTitle(dto.Title);
 
-            if(isTitleDuplicate)
+            if (isTitleDuplicate)
             {
                 throw new DuplicateCategoryTitleException();
             }
@@ -60,7 +57,7 @@ namespace SuperMarket.Services.Categories
 
             var category = _repository.FindById(id);
 
-            if(category == null)
+            if (category == null)
             {
                 throw new CategoryNotFoundException();
             }

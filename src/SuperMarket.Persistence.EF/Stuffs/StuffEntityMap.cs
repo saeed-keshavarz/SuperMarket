@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SuperMarket.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperMarket.Persistence.EF.Stuffs
 {
@@ -19,16 +14,15 @@ namespace SuperMarket.Persistence.EF.Stuffs
             builder.Property(_ => _.Id)
                 .ValueGeneratedOnAdd();
 
-            builder.HasMany(_=>_.Invoces)
-                .WithOne(_=>_.Stuff)
-                .HasForeignKey(_=>_.StuffId)
+            builder.HasMany(_ => _.Invoces)
+                .WithOne(_ => _.Stuff)
+                .HasForeignKey(_ => _.StuffId)
                 .OnDelete(DeleteBehavior.ClientNoAction);
 
             builder.HasMany(_ => _.Vouchers)
                 .WithOne(_ => _.Stuff)
                 .HasForeignKey(_ => _.StuffId)
                 .OnDelete(DeleteBehavior.ClientNoAction);
-
         }
     }
 }

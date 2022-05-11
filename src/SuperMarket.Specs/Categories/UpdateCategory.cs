@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Supermarket.Test.Tools.Categories;
 using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
@@ -7,11 +8,7 @@ using SuperMarket.Persistence.EF.Categories;
 using SuperMarket.Services.Categories;
 using SuperMarket.Services.Categories.Contracts;
 using SuperMarket.Specs.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -43,19 +40,17 @@ namespace SuperMarket.Specs.Categories
         [Given("دسته بندی با عنوان ‘لبنیات’در فهرست دسته بندی کالا وجود دارد")]
         public void Given()
         {
-            _category = new Category()
-            {
-                Title = "لبنیات",
-            };
-
+            _category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 
         [When("دسته بندی با عنوان ‘لبنیات’ را به ‘خشکبار’ ویرایش می کنیم")]
         public void When()
         {
-            var category = _dataContext.Categories.FirstOrDefault(_ => _.Title == _category.Title);
-            _dto = GenerateUpdateCategoryDto("خشکبار");
+            var category = _dataContext.Categories
+                .FirstOrDefault(_ => _.Title == _category.Title);
+
+            _dto = CategoryFactory.GenerateUpdateCategoryDto("خشکبار");
 
             _sut.Update(category.Id, _dto);
         }
@@ -73,14 +68,6 @@ namespace SuperMarket.Specs.Categories
             Runner.RunScenario(_ => Given()
             , _ => When()
             , _ => Then());
-        }
-
-        private static UpdateCategoryDto GenerateUpdateCategoryDto(string title)
-        {
-            return new UpdateCategoryDto
-            {
-                Title = title,
-            };
         }
     }
 }

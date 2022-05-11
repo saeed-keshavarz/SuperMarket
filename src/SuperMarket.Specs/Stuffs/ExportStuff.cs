@@ -8,10 +8,7 @@ using SuperMarket.Services.Invoices;
 using SuperMarket.Services.Invoices.Contracts;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -82,7 +79,7 @@ InOrderTo = "و آن را به فروش برسانم "
                 Quantity = 5,
                 Price = 2000,
                 StuffId = _stuff.Id,
-                Buyer="کشاورز",
+                Buyer = "کشاورز",
             };
 
             _sut.Add(_dto);

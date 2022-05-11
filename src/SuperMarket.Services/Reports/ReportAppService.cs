@@ -1,9 +1,5 @@
 ﻿using SuperMarket.Services.Reports.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperMarket.Services.Reports
 {
@@ -16,17 +12,20 @@ namespace SuperMarket.Services.Reports
             _repository = repository;
         }
 
-        public GetProfitByCategoryDto GetProfitByCategory(int categpryId, DateTime start, DateTime end)
+        public GetProfitByCategoryDto GetProfitByCategory(int categpryId,
+            DateTime start, DateTime end)
         {
             decimal cost = 0;
             decimal income = 0;
-            
+
             var category = _repository.GetCategoryById(categpryId);
-           
-            var vouchers = _repository.GetAllVoucherRelatedCategoryByDateRange(categpryId, start, end);
-            var invoices = _repository.GetAllInvoiceRelatedCategoryByDateRange(categpryId, start, end);
-           
-            foreach (var item in vouchers)      
+
+            var vouchers = _repository
+                .GetAllVoucherRelatedCategoryByDateRange(categpryId, start, end);
+            var invoices = _repository
+                .GetAllInvoiceRelatedCategoryByDateRange(categpryId, start, end);
+
+            foreach (var item in vouchers)
                 cost += item.Quantity * item.Price;
 
             foreach (var item in invoices)
@@ -41,15 +40,18 @@ namespace SuperMarket.Services.Reports
             };
         }
 
-        public GetProfitByStuffDto GetProfitByStuff(int stuffId, DateTime start, DateTime end)
+        public GetProfitByStuffDto GetProfitByStuff(int stuffId,
+            DateTime start, DateTime end)
         {
             decimal cost = 0;
             decimal income = 0;
 
             var stuff = _repository.GetStuffById(stuffId);
 
-            var vouchers = _repository.GetAllVoucherRelatedStuffByDateRange(stuffId, start, end);
-            var invoices = _repository.GetAllInvoiceRelatedStuffByDateRange(stuffId, start, end);
+            var vouchers = _repository
+                .GetAllVoucherRelatedStuffByDateRange(stuffId, start, end);
+            var invoices = _repository
+                .GetAllInvoiceRelatedStuffByDateRange(stuffId, start, end);
 
             foreach (var item in vouchers)
                 cost += item.Quantity * item.Price;
@@ -62,7 +64,7 @@ namespace SuperMarket.Services.Reports
                 Title = stuff.Title,
                 Cost = cost,
                 Income = income,
-                Profit = income - cost,    
+                Profit = income - cost,
             };
         }
 

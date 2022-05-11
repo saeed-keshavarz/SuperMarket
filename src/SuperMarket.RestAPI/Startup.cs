@@ -1,23 +1,14 @@
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Persistence.EF;
 using SuperMarket.Persistence.EF.Categories;
-using SuperMarket.Persistence.EF.Stuffs;
 using SuperMarket.Services.Categories;
-using SuperMarket.Services.Stuffs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SuperMarket.RestAPI
 {

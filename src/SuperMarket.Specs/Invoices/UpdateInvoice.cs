@@ -8,10 +8,7 @@ using SuperMarket.Services.Invoices;
 using SuperMarket.Services.Invoices.Contracts;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -71,7 +68,7 @@ namespace SuperMarket.Specs.Invoices
             {
                 Title = "فاکتور شیر",
                 Date = new DateTime(1400, 02, 21),
-                Buyer="آقای کشاورز",
+                Buyer = "آقای کشاورز",
                 Quantity = 10,
                 Price = 10000,
                 StuffId = _stuff.Id,
@@ -89,7 +86,7 @@ namespace SuperMarket.Specs.Invoices
             {
                 Title = "فاکتور: " + _stuff.Title + " " + DateTime.Now.ToShortDateString(),
                 Date = new DateTime(1400, 02, 20),
-                Buyer="کشاورز",
+                Buyer = "کشاورز",
                 Quantity = 15,
                 Price = 20000,
                 StuffId = _stuff.Id,

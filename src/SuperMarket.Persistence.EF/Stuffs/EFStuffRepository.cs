@@ -1,14 +1,11 @@
 ﻿using SuperMarket.Entities;
 using SuperMarket.Services.Stuffs.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperMarket.Persistence.EF.Stuffs
 {
-    public class EFStuffRepository:StuffRepository
+    public class EFStuffRepository : StuffRepository
     {
         private readonly EFDataContext _dataContext;
 
@@ -22,11 +19,6 @@ namespace SuperMarket.Persistence.EF.Stuffs
             _dataContext.Stuffs.Add(stuff);
         }
 
-        public void Delete(Stuff stuff)
-        {
-            _dataContext.Stuffs.Remove(stuff);
-        }
-
         public Stuff FindById(int id)
         {
             return _dataContext.Stuffs.Find(id);
@@ -35,6 +27,11 @@ namespace SuperMarket.Persistence.EF.Stuffs
         public IList<Stuff> GetAllStuff()
         {
             return _dataContext.Stuffs.ToList();
+        }
+
+        public void Delete(Stuff stuff)
+        {
+            _dataContext.Stuffs.Remove(stuff);
         }
 
         public bool IsExistStuffTitle(string title)

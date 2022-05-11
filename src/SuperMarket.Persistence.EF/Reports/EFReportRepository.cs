@@ -24,7 +24,8 @@ namespace SuperMarket.Persistence.EF.Reports
             return _dataContext.Categories.Find(id);
         }
 
-        public List<Voucher> GetAllVoucherByDateRange(DateTime start, DateTime end)
+        public List<Voucher> GetAllVoucherByDateRange(DateTime start,
+            DateTime end)
         {
             return _dataContext.Vouchers.Where(_ =>
            _.Date >= start &&
@@ -32,7 +33,8 @@ namespace SuperMarket.Persistence.EF.Reports
            ).ToList();
         }
 
-        public List<Invoice> GetAllInvoiceByDateRange(DateTime start, DateTime end)
+        public List<Invoice> GetAllInvoiceByDateRange(DateTime start,
+            DateTime end)
         {
             return _dataContext.Invoices.Where(_ =>
             _.Date >= start &&
@@ -40,7 +42,8 @@ namespace SuperMarket.Persistence.EF.Reports
             ).ToList();
         }
 
-        public List<Voucher> GetAllVoucherRelatedStuffByDateRange(int stuffId, DateTime start, DateTime end)
+        public List<Voucher> GetAllVoucherRelatedStuffByDateRange(int stuffId,
+            DateTime start, DateTime end)
         {
             return _dataContext.Vouchers.Where(_ =>
             _.Date >= start &&
@@ -49,7 +52,8 @@ namespace SuperMarket.Persistence.EF.Reports
             ).ToList();
         }
 
-        public List<Invoice> GetAllInvoiceRelatedStuffByDateRange(int stuffId, DateTime start, DateTime end)
+        public List<Invoice> GetAllInvoiceRelatedStuffByDateRange(int stuffId,
+            DateTime start, DateTime end)
         {
             return _dataContext.Invoices.Where(_ =>
             _.Date >= start &&
@@ -58,7 +62,8 @@ namespace SuperMarket.Persistence.EF.Reports
             ).ToList();
         }
 
-        public List<Voucher> GetAllVoucherRelatedCategoryByDateRange(int categoryId, DateTime start, DateTime end)
+        public List<Voucher> GetAllVoucherRelatedCategoryByDateRange(int categoryId,
+            DateTime start, DateTime end)
         {
             return _dataContext.Vouchers.Where(_ =>
             _.Stuff.CategoryId == categoryId &&
@@ -67,7 +72,8 @@ namespace SuperMarket.Persistence.EF.Reports
              ).ToList();
         }
 
-        public List<Invoice> GetAllInvoiceRelatedCategoryByDateRange(int categoryId, DateTime start, DateTime end)
+        public List<Invoice> GetAllInvoiceRelatedCategoryByDateRange(int categoryId,
+            DateTime start, DateTime end)
         {
             return _dataContext.Invoices.Where(_ =>
             _.Stuff.CategoryId == categoryId &&

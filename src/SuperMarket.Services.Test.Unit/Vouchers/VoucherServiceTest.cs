@@ -91,7 +91,7 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             expected.Price.Should().Be(1000);
         }
 
-            [Fact]
+        [Fact]
         public void GetAll_returns_all_vouchers()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");
@@ -106,9 +106,23 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             var expected = _sut.GetAllVouchers();
 
             expected.Should().HaveCount(3);
-            expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 10 && _.Price == 1000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 20 && _.Price == 1000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "سند شیر" && _.Quantity == 30 && _.Price == 1000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ =>
+            _.Title == "سند شیر" &&
+            _.Quantity == 10 &&
+            _.Price == 1000 &&
+            _.StuffId == stuff.Id);
+
+            expected.Should().Contain(_ =>
+            _.Title == "سند شیر" &&
+            _.Quantity == 20 &&
+            _.Price == 1000 &&
+            _.StuffId == stuff.Id);
+
+            expected.Should().Contain(_ =>
+            _.Title == "سند شیر" &&
+            _.Quantity == 30 &&
+            _.Price == 1000 &&
+            _.StuffId == stuff.Id);
         }
 
         [Fact]
@@ -146,7 +160,6 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             var dummyVoucherId = 1000;
-            var dummyQuantity = 10;
             var dto = VoucherFactory.GenerateUpdateVoucherDto(stuff.Id, "سند شیر");
 
             Action expected = () => _sut.Update(dummyVoucherId, dto);
@@ -180,8 +193,6 @@ namespace SuperMarket.Services.Test.Unit.Vouchers
         [Fact]
         public void Delete_throw_VoucherNotFoundException_when_voucher_with_id_is_not_exist()
         {
-            var stuffId = 10;
-            var quantity = 10;
             var dummyVoucherId = 1000;
 
             Action expected = () => _sut.Delete(dummyVoucherId);

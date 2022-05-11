@@ -1,13 +1,8 @@
 ﻿using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
-using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Vouchers.Contracts;
 using SuperMarket.Services.Vouchers.Exceptions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperMarket.Services.Vouchers
 {

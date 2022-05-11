@@ -53,9 +53,15 @@ namespace Supermarket.Test.Tools.Invoices
         {
             return new List<Invoice>
             {
-                new Invoice {Title="فاکتور شیر", Date =new DateTime(1401, 02, 18), Quantity=10,StuffId=stuffId,Price=2000 },
-                new Invoice {Title="فاکتور شیر", Date =new DateTime(1401, 02, 19), Quantity=20,StuffId=stuffId,Price=2000 },
-                new Invoice {Title="فاکتور شیر", Date =new DateTime(1401, 02, 20), Quantity=30,StuffId=stuffId,Price=2000 },
+                new Invoice {Title="فاکتور شیر",
+                    Date =new DateTime(1401, 02, 18),
+                    Quantity=10,StuffId=stuffId,Price=2000 },
+                new Invoice {Title="فاکتور شیر", 
+                    Date =new DateTime(1401, 02, 19),
+                    Quantity=20,StuffId=stuffId,Price=2000 },
+                new Invoice {Title="فاکتور شیر",
+                    Date =new DateTime(1401, 02, 20), 
+                    Quantity=30,StuffId=stuffId,Price=2000 },
             };
         }
     }

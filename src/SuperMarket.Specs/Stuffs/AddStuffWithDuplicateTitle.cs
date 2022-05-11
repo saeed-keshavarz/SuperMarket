@@ -9,10 +9,7 @@ using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Stuffs.Exceptions;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -88,8 +85,8 @@ namespace SuperMarket.Specs.Stuffs
         [Then("تنها یک کالا با عنوان ‘شیر’ و موجودی ‘10’ و واحد ‘پاکت ‘ و حداقل موجودی ‘5’ و حداکثر موجودی ‘20’ در دسته بندی کالا  با عنوان ‘ لبنبات’ باید وجود داشته باشد")]
         public void Then()
         {
-            _dataContext.Stuffs.Where(_=>_.Title ==_dto.Title
-            && _.CategoryId==_category.Id)
+            _dataContext.Stuffs.Where(_ => _.Title == _dto.Title
+            && _.CategoryId == _category.Id)
                 .Should().HaveCount(1);
         }
 

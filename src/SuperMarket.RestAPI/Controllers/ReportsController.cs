@@ -16,13 +16,15 @@ namespace SuperMarket.RestAPI.Controllers
         }
 
         [HttpGet("stuff/{id}/{start}/{end}")]
-        public GetProfitByStuffDto GetProfitDateRange(int id, DateTime start, DateTime End)
+        public GetProfitByStuffDto GetProfitDateRange(int id,
+            DateTime start, DateTime End)
         {
             return _service.GetProfitByStuff(id, start, End);
         }
 
         [HttpGet("category/{id}/{start}/{end}")]
-        public GetProfitByCategoryDto GetProfitByCategory(int id, DateTime start, DateTime End)
+        public GetProfitByCategoryDto GetProfitByCategory(int id,
+            DateTime start, DateTime End)
         {
             return _service.GetProfitByCategory(id, start, End);
         }

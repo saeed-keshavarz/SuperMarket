@@ -2,7 +2,6 @@
 using Supermarket.Test.Tools.Categories;
 using Supermarket.Test.Tools.Invoices;
 using Supermarket.Test.Tools.Stuffs;
-using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
@@ -11,10 +10,7 @@ using SuperMarket.Services.Invoices;
 using SuperMarket.Services.Invoices.Contracts;
 using SuperMarket.Services.Invoices.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SuperMarket.Services.Test.Unit.Invoices
@@ -62,7 +58,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
         }
 
         [Fact]
-        public void Add_throw_InventoryLessThanQuantityInvoiceException_when_add_new_invoice()
+        public void Add_throw_InventoryStuffLessThanQuantityInvoiceException_when_add_new_invoice()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");
             _dataContext.Manipulate(_ => _.Categories.Add(category));
@@ -97,7 +93,7 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             expected.Price.Should().Be(1000);
         }
 
-            [Fact]
+        [Fact]
         public void GetAll_returns_all_invoices()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");
@@ -112,9 +108,23 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             var expected = _sut.GetAllInvoices();
 
             expected.Should().HaveCount(3);
-            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 10 && _.Price == 2000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 20 && _.Price == 2000 && _.StuffId == stuff.Id);
-            expected.Should().Contain(_ => _.Title == "فاکتور شیر" && _.Quantity == 30 && _.Price == 2000 && _.StuffId == stuff.Id);
+            expected.Should().Contain(_ => 
+            _.Title == "فاکتور شیر" &&
+            _.Quantity == 10 && 
+            _.Price == 2000 && 
+            _.StuffId == stuff.Id);
+
+            expected.Should().Contain(_ =>
+            _.Title == "فاکتور شیر" &&
+            _.Quantity == 20 && 
+            _.Price == 2000 && 
+            _.StuffId == stuff.Id);
+
+            expected.Should().Contain(_ => 
+            _.Title == "فاکتور شیر" &&
+            _.Quantity == 30 &&
+            _.Price == 2000 && 
+            _.StuffId == stuff.Id);
         }
 
         [Fact]
@@ -152,7 +162,6 @@ namespace SuperMarket.Services.Test.Unit.Invoices
             _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
 
             var dummyInvoiceId = 1000;
-            var dummyQuantity = 10;
             var dto = InvoiceFactory.GenerateUpdateInvoiceDto(stuff.Id, "سند شیر");
 
             Action expected = () => _sut.Update(dummyInvoiceId, dto);
@@ -186,14 +195,12 @@ namespace SuperMarket.Services.Test.Unit.Invoices
         [Fact]
         public void Delete_throw_InvoiceNotFoundException_when_invoice_with_id_is_not_exist()
         {
-            var stuffId = 10;
-            var quantity = 10;
             var dummyInvoiceId = 1000;
 
             Action expected = () => _sut.Delete(dummyInvoiceId);
 
             expected.Should().ThrowExactly<InvoiceNotFoundException>();
-        } 
+        }
     }
-    
+
 }

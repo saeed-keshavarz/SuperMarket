@@ -52,9 +52,24 @@ namespace Supermarket.Test.Tools.Stuffs
         {
             return new List<Stuff>
             {
-                new Stuff { Title = "شیر", Inventory=10, MinimumInventory=5, MaximumInventory=50,Unit="عدد", CategoryId=categoryId},
-                new Stuff { Title = "پنیر", Inventory=20, MinimumInventory=5, MaximumInventory=50,Unit="بسته", CategoryId=categoryId},
-                new Stuff { Title = "ماست", Inventory=30, MinimumInventory=5, MaximumInventory=50,Unit="کیلوگرم", CategoryId=categoryId}
+                new Stuff { Title = "شیر",
+                    Inventory=10,
+                    MinimumInventory=5, 
+                    MaximumInventory=50,
+                    Unit="عدد", 
+                    CategoryId=categoryId},
+                new Stuff { Title = "پنیر",
+                    Inventory=20,
+                    MinimumInventory=5,
+                    MaximumInventory=50,
+                    Unit="بسته",
+                    CategoryId=categoryId},
+                new Stuff { Title = "ماست",
+                    Inventory=30,
+                    MinimumInventory=5,
+                    MaximumInventory=50,
+                    Unit="کیلوگرم",
+                    CategoryId=categoryId}
             };
         }
     }

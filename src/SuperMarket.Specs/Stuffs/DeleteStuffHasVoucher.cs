@@ -9,10 +9,7 @@ using SuperMarket.Services.Stuffs.Contracts;
 using SuperMarket.Services.Stuffs.Exceptions;
 using SuperMarket.Specs.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -74,7 +71,7 @@ InOrderTo = "و آن را به فروش برسانم "
                 Date = DateTime.Now,
                 Quantity = 10,
                 Price = 10000,
-                StuffId=_stuff.Id,
+                StuffId = _stuff.Id,
             };
 
             _dataContext.Manipulate(_ => _.Vouchers.Add(voucher));

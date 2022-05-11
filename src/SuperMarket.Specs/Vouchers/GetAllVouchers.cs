@@ -9,9 +9,6 @@ using SuperMarket.Services.Vouchers.Contracts;
 using SuperMarket.Specs.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SuperMarket.Specs.BDDHelper;
 
@@ -38,7 +35,6 @@ namespace SuperMarket.Specs.Vouchers
             _unitOfWork = new EFUnitOfWork(_dataContext);
             _repository = new EFVoucherRepository(_dataContext);
             _sut = new VoucherAppService(_repository, _unitOfWork);
-
         }
 
         [Given("سند ورودی با عنوان ‘سند شیر’ و تاریخ ‘21/02/1400’ و تعداد ‘10’ و قیمت ‘10000’ مربوط به کالای با عنوان ‘شیر’ وجود دارد")]

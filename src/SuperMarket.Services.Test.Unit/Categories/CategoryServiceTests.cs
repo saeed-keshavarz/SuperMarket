@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Supermarket.Test.Tools.Categories;
 using Supermarket.Test.Tools.Stuffs;
-using SuperMarket.Entities;
 using SuperMarket.Infrastructure.Application;
 using SuperMarket.Infrastructure.Test;
 using SuperMarket.Persistence.EF;
@@ -10,7 +9,6 @@ using SuperMarket.Services.Categories;
 using SuperMarket.Services.Categories.Contracts;
 using SuperMarket.Services.Categories.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -68,11 +66,11 @@ namespace SuperMarket.Services.Test.Unit.Categories
             expected.Title.Should().Be("Dummy");
         }
 
-            [Fact]
+        [Fact]
         public void GetAll_returns_all_categories()
         {
             var categories = CategoryFactory.CreateCategoriesInDataBase();
-            _dataContext.Manipulate(_ =>_.Categories.AddRange(categories));
+            _dataContext.Manipulate(_ => _.Categories.AddRange(categories));
 
             var expected = _sut.GetAll();
 
