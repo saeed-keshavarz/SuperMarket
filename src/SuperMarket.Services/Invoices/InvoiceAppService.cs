@@ -25,6 +25,14 @@ namespace SuperMarket.Services.Invoices
 
         public void Add(AddInvoiceDto dto)
         {
+            var stuff = _repository.GetStuffById(dto.StuffId);
+
+            if (dto.Quantity > stuff.Inventory)
+            {
+                throw new InventoryStuffLessThanQuantityInvoiceException();
+            }
+            stuff.Inventory -= dto.Quantity;
+
             var invoice = new Invoice
             {
                 Title = dto.Title,
@@ -36,12 +44,7 @@ namespace SuperMarket.Services.Invoices
             };
 
             _repository.Add(invoice);
-
-            var stuff = _repository.GetStuffById(dto.StuffId);
-            stuff.Inventory -= dto.Quantity;
-
             _unitOfWork.Commit();
-
         }
 
         public IList<Invoice> GetAllInvoices()

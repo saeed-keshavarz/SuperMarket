@@ -62,6 +62,24 @@ namespace SuperMarket.Services.Test.Unit.Invoices
         }
 
         [Fact]
+        public void Add_throw_InventoryLessThanQuantityInvoiceException_when_add_new_invoice()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var stuff = StuffFactory.CreateStuff(category, "شیر");
+            stuff.Inventory = 5;
+            _dataContext.Manipulate(_ => _.Stuffs.Add(stuff));
+
+            AddInvoiceDto dto = InvoiceFactory.GenerateAddInvoiceDto(stuff, "فاکتور شیر");
+
+            Action expected = () => _sut.Add(dto);
+
+            expected.Should().ThrowExactly<InventoryStuffLessThanQuantityInvoiceException>();
+
+        }
+
+        [Fact]
         public void GetAll_return_invoice_by_id()
         {
             var category = CategoryFactory.CreateCategory("لبنیات");
